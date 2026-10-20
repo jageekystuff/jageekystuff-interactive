@@ -1,4 +1,4 @@
-/* Jageekystuff AR proof of concept — lazy-loaded AR libs and geometric placeholders. */
+/* Jageekystuff AR proof of concept — lazy-loaded AR libs and 3D Pokémon models. */
 (function(){
   'use strict';
   const start = document.getElementById('start');
@@ -52,24 +52,44 @@
     throw new Error(label + ': ' + (lastError?.message || 'could not be loaded'));
   }
 
+  function pokemonMarkup(name) {
+    const effects = {
+      magmar: `
+        <a-entity position="0 0 0" rotation="0 18 0" animation="property: position; to: 0 0.08 0; dir: alternate; loop: true; dur: 1600; easing: easeInOutSine">
+          <a-gltf-model src="/assets/models/magmar.glb" scale="0.28 0.28 0.28"></a-gltf-model>
+        </a-entity>
+      `,
+      arcanine: `
+        <a-entity position="0 0.35 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 4500; easing: linear">
+          <a-icosahedron radius=".43" detail="1" color="#ffc48e"></a-icosahedron>
+        </a-entity>
+        <a-text value="Arcanine model soon" position="-0.6 -0.4 0" width="2.4" color="#fff7d1" align="center"></a-text>
+      `,
+      raichu: `
+        <a-entity position="0 0 0" rotation="0 -16 0" animation="property: position; to: 0 0.08 0; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine">
+          <a-gltf-model src="/assets/models/raichu.glb" scale="0.42 0.42 0.42"></a-gltf-model>
+        </a-entity>
+      `
+    };
+    return effects[name] || effects.magmar;
+  }
+
   function setEffect(name) {
     current = name;
     choiceButtons.forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.pokemon === name)));
     const root = document.getElementById('effect');
     if (!root) return;
-    const effects = {
-      magmar: `<a-sphere radius=".36" color="#ff7245" material="metalness:.16;roughness:.5" animation="property: position;to:0 .18 0;dir:alternate;loop:true;dur:1100"></a-sphere><a-cone position="0 .56 0" radius-bottom=".29" radius-top="0" height=".73" color="#ffd060" animation="property: rotation;to:0 360 0;loop:true;dur:2900;easing:linear"></a-cone>`,
-      arcanine: `<a-icosahedron radius=".43" detail="1" color="#ffc48e" animation="property: rotation;to:0 360 0;loop:true;dur:5400;easing:linear"></a-icosahedron><a-torus radius=".64" radius-tubular=".025" color="#f18b44" rotation="90 0 0" animation="property: rotation;to:90 360 0;loop:true;dur:3500;easing:linear"></a-torus>`,
-      raichu: `<a-sphere radius=".36" color="#ffd961" animation="property: rotation;to:0 360 0;loop:true;dur:4500;easing:linear"></a-sphere><a-octahedron position="0 .53 0" radius=".27" color="#fff5ab" animation="property: rotation;to:0 360 0;loop:true;dur:1800;easing:linear"></a-octahedron>`
-    };
-    root.innerHTML = effects[name] || effects.magmar;
+    root.innerHTML = pokemonMarkup(name);
   }
 
   function buildScene() {
-    sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true" arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best; detectionMode: mono;" loading-screen="enabled: false">
+    sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; colorManagement: true" arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best; detectionMode: mono;" loading-screen="enabled: false">
+      <a-assets timeout="10000"></a-assets>
       <a-marker id="demo-marker" preset="hiro" emitevents="true" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
         <a-entity id="effect" position="1.65 0.7 0" scale="1 1 1"></a-entity>
       </a-marker>
+      <a-light type="ambient" color="#ffffff" intensity="1.4"></a-light>
+      <a-light type="directional" color="#ffffff" intensity="1.0" position="1 2 1"></a-light>
       <a-entity camera></a-entity>
     </a-scene>`;
     marker = document.getElementById('demo-marker');
