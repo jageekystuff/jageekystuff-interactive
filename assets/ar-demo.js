@@ -20,14 +20,6 @@
   const feedback = document.getElementById('adjust-feedback');
   const info = document.getElementById('model-info');
 
-  // Portal UI: AR.js may attach fullscreen elements with an elevated stacking
-  // context. Put controls as direct body descendants in a dedicated top layer.
-  const uiLayer = document.getElementById('ar-ui-layer');
-  if (uiLayer) {
-    [document.querySelector('.ar-header'), document.querySelector('.ar-bottom'),
-      toggle, panel, start].forEach(el => { if (el) uiLayer.appendChild(el); });
-  }
-
   const models = {
     magmar: '/assets/models/magmar.glb',
     raichu: '/assets/models/raichu.glb'
