@@ -20,6 +20,14 @@
   const feedback = document.getElementById('adjust-feedback');
   const info = document.getElementById('model-info');
 
+  // Portal UI: AR.js may attach fullscreen elements with an elevated stacking
+  // context. Put controls as direct body descendants in a dedicated top layer.
+  const uiLayer = document.getElementById('ar-ui-layer');
+  if (uiLayer) {
+    [document.querySelector('.ar-header'), document.querySelector('.ar-bottom'),
+      toggle, panel, start].forEach(el => { if (el) uiLayer.appendChild(el); });
+  }
+
   const models = {
     magmar: '/assets/models/magmar.glb',
     raichu: '/assets/models/raichu.glb'
@@ -200,7 +208,12 @@
   }
 
   function buildScene() {
-    sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; colorManagement: true" arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best; detectionMode: mono;" loading-screen="enabled: false">
+    // Request a portrait-oriented camera source on a portrait phone.
+    // This reduces the hard crop caused by AR.js's default landscape 640x480 feed.
+    const portrait = window.innerHeight > window.innerWidth;
+    const sourceWidth = portrait ? 480 : 640;
+    const sourceHeight = portrait ? 640 : 480;
+    sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; colorManagement: true" arjs="sourceType: webcam; sourceWidth: ${sourceWidth}; sourceHeight: ${sourceHeight}; displayWidth: ${sourceWidth}; displayHeight: ${sourceHeight}; debugUIEnabled: false; trackingMethod: best; detectionMode: mono;" loading-screen="enabled: false">
       <a-marker id="demo-marker" preset="hiro" emitevents="true" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
         <a-entity id="model-placement" position="1.55 0.18 0"></a-entity>
       </a-marker>
@@ -251,6 +264,30 @@
     }
   });
   refreshControls();
+
+  // Add a viewport diagnostic only when explicitly requested via ?debug=1.
+  // This helps distinguish CSS layout overflow from a cropped camera stream.
+  if (new URLSearchParams(window.location.search).get('debug') === '1') {
+    const diagnostics = document.createElement('div');
+    diagnostics.id = 'ar-debug';
+    diagnostics.style.cssText = 'position:fixed;left:8px;top:110px;z-index:2147483500;background:#071525ed;color:#fff;padding:7px;border:1px solid #8bd8ff;border-radius:9px;font:11px monospace;pointer-events:none;max-width:78vw;white-space:pre-wrap';
+    (uiLayer || document.body).appendChild(diagnostics);
+    const showDiagnostics = () => {
+      const video = document.getElementById('arjs-video');
+      const canvas = document.querySelector('#scene-host canvas');
+      diagnostics.textContent = [
+        'V2.2 mobile debug',
+        'viewport ' + window.innerWidth + 'x' + window.innerHeight,
+        'screen ' + window.screen.width + 'x' + window.screen.height,
+        'body ' + Math.round(document.body.getBoundingClientRect().width),
+        video ? ('video ' + video.videoWidth + 'x' + video.videoHeight + ' / css ' + Math.round(video.getBoundingClientRect().width) + 'x' + Math.round(video.getBoundingClientRect().height)) : 'video not ready',
+        canvas ? ('canvas ' + Math.round(canvas.getBoundingClientRect().width) + 'x' + Math.round(canvas.getBoundingClientRect().height)) : 'canvas not ready'
+      ].join('\n');
+    };
+    window.addEventListener('resize', showDiagnostics);
+    setInterval(showDiagnostics, 1000);
+    showDiagnostics();
+  }
 
   launch.addEventListener('click', async () => {
     if (busy) return;
