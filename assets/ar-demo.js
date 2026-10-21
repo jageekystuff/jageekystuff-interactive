@@ -33,9 +33,9 @@
     raichu: '/assets/models/raichu.glb'
   };
   // Height is the height of the character in units relative to the HIRO marker.
-  // Initial rotations are intentionally conservative; tune from your phone.
+  // Magmar calibrated on Xiaomi Mi 10T Pro; Raichu remains uncalibrated.
   const defaults = {
-    magmar: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
+    magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
     arcanine: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
     raichu: { height: 1.05, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 }
   };
