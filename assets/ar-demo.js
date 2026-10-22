@@ -1,5 +1,5 @@
 /* Jageekystuff Interactive — AR model calibration prototype.
-   Both uploaded GLB files stay unchanged; dimensions are normalized at runtime.
+   Uploaded GLB files stay unchanged; dimensions are normalized at runtime.
    AR.js marker tracking remains the previously validated HIRO setup. */
 (function () {
   'use strict';
@@ -30,14 +30,17 @@
 
   const models = {
     magmar: '/assets/models/magmar.glb',
-    raichu: '/assets/models/raichu.glb'
+    raichu: '/assets/models/raichu.glb',
+    electrode: '/assets/models/electrode.glb'
   };
   // Height is the height of the character in units relative to the HIRO marker.
-  // Magmar calibrated on Xiaomi Mi 10T Pro; Raichu remains uncalibrated.
+  // Magmar and Raichu calibrated on Xiaomi Mi 10T Pro with HIRO marker.
   const defaults = {
     magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
     arcanine: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
-    raichu: { height: 1.05, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 }
+    raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
+    // Electrode is a first-pass estimate, not yet calibrated on the phone.
+    electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
   };
   let current = trainer === 'surge' ? 'raichu' : 'magmar';
   let busy = false;
@@ -55,7 +58,7 @@
       ]));
     } catch { return { ...base }; }
   }
-  const settings = { magmar: getSettings('magmar'), arcanine: getSettings('arcanine'), raichu: getSettings('raichu') };
+  const settings = { magmar: getSettings('magmar'), arcanine: getSettings('arcanine'), raichu: getSettings('raichu'), electrode: getSettings('electrode') };
   const setStatus = txt => { status.textContent = txt; };
   const setBootStatus = txt => { bootStatus.textContent = txt; };
   const degrees = d => d * Math.PI / 180;
