@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.6` · **Status:** experimental / work in progress
+**Current version:** `2.7` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -11,7 +11,7 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
 | Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar | Calibrated for HIRO testing |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Raichu calibrated; Electrode awaiting calibration |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Raichu and Electrode calibrated for HIRO testing |
 
 Arcanine and Electabuzz are planned, **not yet available** as 3D models in this project.
 
@@ -25,6 +25,8 @@ Arcanine and Electabuzz are planned, **not yet available** as 3D models in this 
 3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
 4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
 
+**Calibrated Electrode HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
+
 **Current limitation:** The actual cosplay cards do **not** yet have their own trained marker. The QR-to-AR-marker design still needs implementation and real-size testing. No final printed QR/marker artwork is included yet.
 
 For the test marker, see [HIRO](https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png). Show or print it separately while testing with a phone.
@@ -34,7 +36,7 @@ For the test marker, see [HIRO](https://raw.githubusercontent.com/AR-js-org/AR.j
 - Plain HTML, CSS and JavaScript, with [A-Frame](https://aframe.io/) and [AR.js](https://ar-js-org.github.io/AR.js-Docs/).
 - Static hosting on **Cloudflare Pages**, connected to this GitHub repository.
 - Models in glTF binary `.glb` format under `assets/models/`.
-- Designed for modern mobile browsers with HTTPS and camera permission; Android Chrome has been used for on-device tests. Browser and device behavior can vary.
+- Designed for modern mobile browsers with HTTPS and camera permission; Android Chrome has been used for on-device tests. Browser and device behavior can vary. **iOS visual and model-orientation discrepancies remain open for investigation** (see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md)).
 
 ### Repository structure
 
@@ -48,6 +50,7 @@ assets/models/*.glb            3D models
 credits/index.html             Creator and asset attributions
 README.md                      Project overview and instructions
 CHANGELOG.md                   Version history
+docs/KNOWN_ISSUES.md           Deferred compatibility bugs
 VERSION                        Current project version
 ```
 
@@ -72,14 +75,16 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 ## Planned (not yet implemented)
 
 - Add and calibrate Electabuzz, Arcanine and any further trainer-specific Pokémon models.
-- Calibrate Electrode on the phone.
+- Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
 - Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
 - Keep the social media QR separate from the AR QR on the physical card.
 - Add a language selector: **Italian by default**, with **English** and **Spanish** alternatives. Multilingual support comes **after the 3D models and AR markers are stable**.
 
 ## Credits, assets and intellectual property
 
-**Concept, website and cosplay experience:** Johán Hernandez Molina & Aldo Palmieri — Jageekystuff.
+**Project concept, cosplay design and physical production:** Johán Hernandez Molina & Aldo Palmieri — Jageekystuff.
+
+**Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
 The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode by `nguyenlouis32` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 

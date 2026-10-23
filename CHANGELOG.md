@@ -4,6 +4,19 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.7] — 2026-10-23
+
+### Confirmed
+- Verified **Electrode** in the HIRO marker experience with `height=1.05`, `yaw=0`, `pitch=-85`, `roll=0`, `x=0.3`, `y=0`, `z=0.5`. These values were already the V2.5 default; this release confirms them and updates the source comment, with **no behavior change**.
+
+### Updated
+- Clarified that **Johán Hernandez Molina and Aldo Palmieri both participate in cosplay design and physical production**.
+- Documented AI-assisted development transparently in the repository and public credits.
+- Added `docs/KNOWN_ISSUES.md` for deferred iOS compatibility investigations (UI color/contrast, 3D orientation, sensor permissions, camera tracking comparisons).
+
+### Unchanged
+- No changes to camera framing, rendering logic, model assets, or final QR/AR marker implementation. HIRO remains the test marker.
+
 ## [2.6] — 2026-10-23
 
 ### Added

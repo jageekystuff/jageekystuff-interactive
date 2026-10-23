@@ -34,12 +34,12 @@
     electrode: '/assets/models/electrode.glb'
   };
   // Height is the height of the character in units relative to the HIRO marker.
-  // Magmar and Raichu calibrated on Xiaomi Mi 10T Pro with HIRO marker.
+  // Magmar, Raichu and Electrode calibrated in HIRO marker tests.
   const defaults = {
     magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
     arcanine: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
     raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-    // Electrode is a first-pass estimate, not yet calibrated on the phone.
+    // Electrode HIRO preset confirmed with the following values on 2026-10-23.
     electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
   };
   let current = trainer === 'surge' ? 'raichu' : 'magmar';
