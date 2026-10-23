@@ -4,6 +4,17 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.8] — 2026-10-23
+
+### Added
+- **Electabuzz** GLB asset under `assets/models/electabuzz.glb` and a third Pokémon selection button for Lt. Surge alongside Raichu and Electrode.
+- Initial **provisional** Electabuzz calibration controls and independent local settings: `height=1.05`, `yaw=0`, `pitch=-85`, `roll=0`, `x=0.3`, `y=0`, `z=0.5`. Values must be validated on a real phone and marker.
+- Electabuzz model attribution: ["Electabuzz" by nguyenlouis32](https://skfb.ly/ouHEN), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+### Maintained
+- Existing Magmar, Raichu and Electrode defaults and mobile-camera settings are unchanged.
+- HIRO remains the test marker; QR-as-marker design, iOS compatibility issues and multilingüe remain on the backlog.
+
 ## [2.7] — 2026-10-23
 
 ### Confirmed

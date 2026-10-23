@@ -31,16 +31,20 @@
   const models = {
     magmar: '/assets/models/magmar.glb',
     raichu: '/assets/models/raichu.glb',
-    electrode: '/assets/models/electrode.glb'
+    electrode: '/assets/models/electrode.glb',
+    electabuzz: '/assets/models/electabuzz.glb'
   };
   // Height is the height of the character in units relative to the HIRO marker.
   // Magmar, Raichu and Electrode calibrated in HIRO marker tests.
+  // Electabuzz is provisional pending the same test.
   const defaults = {
     magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
     arcanine: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
     raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
     // Electrode HIRO preset confirmed with the following values on 2026-10-23.
-    electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
+    electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
+    // Initial guess only. Electabuzz still needs on-device calibration.
+    electabuzz: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
   };
   let current = trainer === 'surge' ? 'raichu' : 'magmar';
   let busy = false;
@@ -58,7 +62,7 @@
       ]));
     } catch { return { ...base }; }
   }
-  const settings = { magmar: getSettings('magmar'), arcanine: getSettings('arcanine'), raichu: getSettings('raichu'), electrode: getSettings('electrode') };
+  const settings = Object.fromEntries(Object.keys(defaults).map(name => [name, getSettings(name)]));
   const setStatus = txt => { status.textContent = txt; };
   const setBootStatus = txt => { bootStatus.textContent = txt; };
   const degrees = d => d * Math.PI / 180;

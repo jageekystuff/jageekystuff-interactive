@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.7` · **Status:** experimental / work in progress
+**Current version:** `2.8` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -11,9 +11,9 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
 | Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar | Calibrated for HIRO testing |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Raichu and Electrode calibrated for HIRO testing |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | Raichu and Electrode calibrated; Electabuzz needs on-device calibration |
 
-Arcanine and Electabuzz are planned, **not yet available** as 3D models in this project.
+Arcanine is planned, **not yet available** as a 3D model in this project. Electabuzz is now selectable under Lt. Surge, with provisional calibration.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -25,7 +25,7 @@ Arcanine and Electabuzz are planned, **not yet available** as 3D models in this 
 3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
 4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
 
-**Calibrated Electrode HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
+**Calibrated Raichu and Electrode HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
 
 **Current limitation:** The actual cosplay cards do **not** yet have their own trained marker. The QR-to-AR-marker design still needs implementation and real-size testing. No final printed QR/marker artwork is included yet.
 
@@ -74,7 +74,7 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 ## Planned (not yet implemented)
 
-- Add and calibrate Electabuzz, Arcanine and any further trainer-specific Pokémon models.
+- Calibrate the newly added Electabuzz on a real device; add and calibrate Arcanine and any further trainer-specific Pokémon models.
 - Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
 - Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
 - Keep the social media QR separate from the AR QR on the physical card.
@@ -86,6 +86,6 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 **Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
-The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode by `nguyenlouis32` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode and Electabuzz by `nguyenlouis32` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 **Attribution for Magmar and Raichu needs to be completed** once the original asset links and terms are confirmed. Do not interpret a model creator's license as a license to the underlying Pokémon character. This repository does not currently grant a blanket license for its code or third-party assets.
