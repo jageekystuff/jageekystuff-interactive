@@ -4,6 +4,18 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.9] — 2026-10-23
+
+### Added
+- **Arcanine** and **Rapidash** to Blaine’s three-option Pokémon selector, with downloadable GLB assets and provisional calibration controls.
+- Rapidash is explicitly **provisional**: its original white/gray flame materials have not been modified.
+- An **experimental lowered-arms Electabuzz mesh**, geometrically re-posed without adding a rig or animations. The original model is retained as `assets/models/electabuzz-original.glb` for rollback if the AR result is unsatisfactory.
+- Creator attributions: [Arcanine by Chechorams16](https://skfb.ly/pAXUy) and [Rapidash by nguyenlouis32](https://skfb.ly/ouEwL), both CC BY 4.0. Electabuzz’s geometry modification is disclosed in credits.
+
+### Confirmed
+- Electabuzz HIRO calibration from Android test: `height=1.05`, `yaw=0`, `pitch=-85`, `roll=0`, `x=0.3`, `y=0`, `z=0.5`. The new experimental arm pose still requires visual testing.
+- No new animations, no change to camera or AR marker behavior. iOS bugs remain deferred.
+
 ## [2.8] — 2026-10-23
 
 ### Added

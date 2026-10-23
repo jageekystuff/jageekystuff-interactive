@@ -32,18 +32,21 @@
     magmar: '/assets/models/magmar.glb',
     raichu: '/assets/models/raichu.glb',
     electrode: '/assets/models/electrode.glb',
-    electabuzz: '/assets/models/electabuzz.glb'
+    electabuzz: '/assets/models/electabuzz.glb',
+    arcanine: '/assets/models/arcanine.glb',
+    rapidash: '/assets/models/rapidash.glb'
   };
   // Height is the height of the character in units relative to the HIRO marker.
-  // Magmar, Raichu and Electrode calibrated in HIRO marker tests.
-  // Electabuzz is provisional pending the same test.
+  // Magmar, Raichu, Electrode and Electabuzz calibrated in HIRO marker tests.
+  // Electabuzz mesh was re-posed experimentally; Arcanine and Rapidash need calibration.
   const defaults = {
     magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
-    arcanine: { height: 1.3, yaw: 0, pitch: 0, roll: 0, x: 1.55, y: 0.18, z: 0 },
+    arcanine: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
+    rapidash: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
     raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
     // Electrode HIRO preset confirmed with the following values on 2026-10-23.
     electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-    // Initial guess only. Electabuzz still needs on-device calibration.
+    // Electabuzz calibrated on Xiaomi 2026-10-23; experimental lowered-arms mesh needs visual approval.
     electabuzz: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
   };
   let current = trainer === 'surge' ? 'raichu' : 'magmar';
@@ -165,8 +168,8 @@
     sizeInfo = '';
     root.innerHTML = '';
     if (!models[name]) {
-      setStatus('Arcanine model not added yet');
-      info.textContent = 'Arcanine is not available yet. Choose Magmar for the 3D test.';
+      setStatus('Pokémon model unavailable');
+      info.textContent = 'No 3D model configured for this selection.';
       const placeholder = document.createElement('a-entity');
       placeholder.innerHTML = '<a-icosahedron radius="0.38" position="0 0.38 0" color="#ffbd77"></a-icosahedron>';
       root.appendChild(placeholder);

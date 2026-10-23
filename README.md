@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.8` · **Status:** experimental / work in progress
+**Current version:** `2.9` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -10,10 +10,10 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
-| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar | Calibrated for HIRO testing |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | Raichu and Electrode calibrated; Electabuzz needs on-device calibration |
+| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine, Rapidash | Magmar calibrated; Arcanine and Rapidash await on-device calibration; Rapidash provisional |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | All three calibrated on HIRO; Electabuzz lowered-arm pose experimental |
 
-Arcanine is planned, **not yet available** as a 3D model in this project. Electabuzz is now selectable under Lt. Surge, with provisional calibration.
+All six Pokémon models are now selectable. Arcanine and Rapidash have provisional orientations pending HIRO-marker calibration. Rapidash uses its creator’s original white/gray flames and is marked provisional. Electabuzz includes an experimental lowered-arms mesh edited via code; its original GLB is retained as `assets/models/electabuzz-original.glb` for easy rollback.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -74,7 +74,7 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 ## Planned (not yet implemented)
 
-- Calibrate the newly added Electabuzz on a real device; add and calibrate Arcanine and any further trainer-specific Pokémon models.
+- Calibrate Arcanine and Rapidash on a real device; verify Electabuzz’s experimental lowered-arm pose on mobile and restore the original if the geometry looks wrong.
 - Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
 - Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
 - Keep the social media QR separate from the AR QR on the physical card.
@@ -86,6 +86,6 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 **Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
-The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode and Electabuzz by `nguyenlouis32` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, Electabuzz and Rapidash by `nguyenlouis32`, and Arcanine by `Chechorams16`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 **Attribution for Magmar and Raichu needs to be completed** once the original asset links and terms are confirmed. Do not interpret a model creator's license as a license to the underlying Pokémon character. This repository does not currently grant a blanket license for its code or third-party assets.
