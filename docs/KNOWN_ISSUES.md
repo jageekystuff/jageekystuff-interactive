@@ -15,6 +15,8 @@ These are **backlog items**, not verified diagnoses. Do not change working Andro
 
 ## Remaining core tasks
 
-- Add and calibrate Electabuzz for Lt. Surge; Arcanine for Blaine.
-- Create, test and print final combined QR/AR markers at physical card size.
-- Add Italian (default), English and Spanish after core AR is reliable.
+- The **four approved models** (Magmar, Arcanine, Raichu, Electrode) remain usable on Android with the temporary HIRO marker.
+- Electabuzz and Rapidash did not meet the visual standard; they are removed from the active web app, not scheduled as blockers for launch.
+- Create and validate combined QR/AR markers at physical cosplay-card size.
+- Test camera and marker layout on iOS/Safari, then prepare usable public photo flow.
+- Add Italian (default), English and Spanish after the core AR interaction is reliable.

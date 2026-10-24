@@ -1,0 +1,6 @@
+# Local release archives and temporary files
+*.zip
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

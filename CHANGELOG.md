@@ -4,6 +4,24 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.11-hfx-1] — 2026-10-24
+
+### Removed
+- **Electabuzz** (original, raised-arms experiment, and V2) from Lt. Surge; removed their source GLBs from the release after comparison on Android. The poses did not meet the visual quality target.
+- **Rapidash** (original and V2) from Blaine and from the shipped GLBs because the flame materials rendered incorrectly on-device.
+- Removed all test variant buttons, model mappings, calibration defaults, outdated homepage listings and active asset credits for removed models.
+
+### Retained
+- **Blaine:** Magmar and Arcanine, both with previously approved calibration presets.
+- **Lt. Surge:** Raichu and Electrode, both with previously approved calibration presets.
+- Mobile camera layout, AR.js HIRO recognition, model fitting and calibration controls unchanged.
+- Rejected source assets and creator credits remain available in Git history; `CHANGELOG.md` preserves the record of the earlier tests.
+
+### Maintenance
+- Updated homepage, experience text, active credits, README and known issues to show the four-model scope accurately.
+- Distributed a complete, readable project snapshot for local folder replacement. Added `.gitignore` to prevent accidentally committing local ZIP archives.
+- Hotfix label follows the project-specific `v2.11-hfx-1` convention; next planned minor remains **v2.12**.
+
 ## [2.11] — 2026-10-24
 
 ### Added

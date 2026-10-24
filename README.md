@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.11` · **Status:** experimental / work in progress
+**Current version:** `2.11-hfx-1` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -10,10 +10,10 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
-| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine, **Rapidash V2 (test)** | First two calibrated; new Rapidash is experimental and may still show white flames |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz, **Electabuzz V2 (test)** | First three calibrated; alternative Electabuzz is uncalibrated and still needs a pose review |
+| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Approved and calibrated on Android with HIRO |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Approved and calibrated on Android with HIRO |
 
-**Five original roster slots are retained, plus two optional V2 test models**: Blaine's Magmar and Arcanine with a test-only Rapidash V2; Surge's Raichu, Electrode and the existing Electabuzz with a new Electabuzz V2 test. The prior Rapidash model stays archived; its appearance has not been approved. All existing calibrated models preserve their settings. Experimental models have their own calibration keys and are not considered stable until reviewed on phones.
+**v2.11-hfx-1 cleanup:** Experimental Electabuzz and Rapidash models and their selectors were removed after phone testing. Only the four accepted `.glb` files remain in this snapshot. The earlier models and their credits are preserved in Git history, not deployed. This hotfix does not change the validated Android camera, marker-tracking or calibration implementation.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -25,7 +25,7 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
 4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
 
-**Calibrated Raichu, Electrode, Electabuzz and Arcanine HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
+**Calibrated Raichu, Electrode and Arcanine HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
 
 **Current limitation:** The actual cosplay cards do **not** yet have their own trained marker. The QR-to-AR-marker design still needs implementation and real-size testing. No final printed QR/marker artwork is included yet.
 
@@ -81,26 +81,28 @@ This is a **simplified project convention inspired by [Semantic Versioning](http
 
 Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered release. Never reuse a published release label for different contents.
 
-## Experimental model variants — v2.11
+## Hotfix labels and clean deployments
 
-The currently validated models are **preserved without replacement**. Two additional GLBs have been added solely for testing:
+After a published minor release, small follow-up fixes use `v2.11-hfx-1`,
+`v2.11-hfx-2`, etc., without advancing to v2.12. This is a custom naming
+convention rather than standard SemVer.
 
-- `assets/models/electabuzz_v2.glb` — alternative source model by Chechorams16 with a skeletal rig, but no embedded animation. Choose **Electabuzz V2 (test)** on the Surge page. It has a separate browser calibration key: `electabuzz_v2`.
-- `assets/models/rapidash_v2.glb` — alternative source model by Nhiny Jinromon; contains strong white emissive flame materials that might still look incorrect in AR. Choose **Rapidash V2 (test)** on the Blaine page. Separate key: `rapidash_v2`.
+This release is a **complete site snapshot**. Its four model files are:
+`magmar.glb`, `arcanine.glb`, `raichu.glb`, `electrode.glb`. Old Electabuzz
+and Rapidash GLBs should be deleted from the local working tree and from
+version control in this commit; they remain recoverable through Git history.
 
-The original `electabuzz.glb`, archived `electabuzz-original.glb`, and archived `rapidash.glb` are not overwritten. The V2 assets contain no new animations. **Do not treat V2 alternatives as approved production models until they pass on-device evaluation.**
-
-### Test/hotfix release convention
-
-Stable minor revisions proceed `2.10 → 2.11 → 2.12`. If a targeted fix is needed for release `2.11` before moving to `2.12`, use the project-specific label `v2.11-hfx-1` (then `v2.11-hfx-2`, if required). This is a project convention, not strict Semantic Versioning. Document the fix in `CHANGELOG.md` while preserving the planned minor-version sequence.
+Keep the repository's `.git/` directory when refreshing the project locally.
+Replacing the working files but preserving `.git/` lets Git detect deletions.
 
 ## Planned (not yet implemented)
 
-- Compare Electabuzz V2 and Rapidash V2 on Android/iOS. Decide whether to adopt the new variants, refine a pose, or find a better normal-color Rapidash before making it a permanent option.
-- Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
-- Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
-- Keep the social media QR separate from the AR QR on the physical card.
-- Add a language selector: **Italian by default**, with **English** and **Spanish** alternatives. Multilingual support comes **after the 3D models and AR markers are stable**.
+- Create and validate QR + AR image targets integrated into the physical cosplay cards, replacing the temporary HIRO marker.
+- Test the final-sized printed markers and Pokémon placement beside the cosplayers.
+- Review mobile iOS/Safari appearance and marker orientation issues; see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
+- Add photo capture and language selection (Italian default, English and Spanish) after the core interaction is stable.
+- Consider better models for Electabuzz or Rapidash only if available without compromising stability; neither is currently offered.
+- Consider subtle animations and effects as a later enhancement, not part of this hotfix.
 
 ## Credits, assets and intellectual property
 
@@ -108,6 +110,6 @@ Stable minor revisions proceed `2.10 → 2.11 → 2.12`. If a targeted fix is ne
 
 **Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
-The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, original Electabuzz and archived Rapidash by `nguyenlouis32`, Arcanine and Electabuzz V2 by `Chechorams16`, and Rapidash V2 by `Nhiny Jinromon`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The website lists current model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including **Electrode** by `nguyenlouis32` and **Arcanine** by `Chechorams16` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Historical attribution for withdrawn Electabuzz/Rapidash assets is retained in the Git history and [CHANGELOG.md](CHANGELOG.md).
 
-**Attribution for Magmar and Raichu needs to be completed** once the original asset links and terms are confirmed. Do not interpret a model creator's license as a license to the underlying Pokémon character. This repository does not currently grant a blanket license for its code or third-party assets.
+**Attribution for Magmar and Raichu still needs to be completed** once original asset links and licenses are confirmed. A model maker's license does not imply rights to the underlying Pokémon character. This repository does not provide a blanket license for its source code or third-party models.

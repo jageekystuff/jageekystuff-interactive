@@ -26,32 +26,27 @@
             toggle, panel, start].forEach(el => { if (el)
             uiLayer.appendChild(el); });
     }
+    // Only four approved Pokémon remain in the public experience.
     const models = {
         magmar: '/assets/models/magmar.glb',
-        raichu: '/assets/models/raichu.glb',
-        electrode: '/assets/models/electrode.glb',
-        electabuzz: '/assets/models/electabuzz.glb',
-        electabuzz_v2: '/assets/models/electabuzz_v2.glb',
         arcanine: '/assets/models/arcanine.glb',
-        rapidash_v2: '/assets/models/rapidash_v2.glb'
-        // Original white-flame Rapidash remains disabled; new V2 is explicitly test-only.
+        raichu: '/assets/models/raichu.glb',
+        electrode: '/assets/models/electrode.glb'
     };
-    // Height is the height of the character in units relative to the HIRO marker.
-    // Magmar, Raichu, Electrode, Electabuzz and Arcanine calibrated on HIRO.
-    // Electabuzz arms-up mesh is an experimental static pose. Rapidash hidden pending replacement.
+
+    // Default calibration measured and approved with the temporary HIRO marker.
     const defaults = {
         magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
         arcanine: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
         raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-        // Electrode HIRO preset confirmed with the following values on 2026-10-23.
-        electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-        // Electabuzz calibrated 2026-10-23; experimental bent-arm/flex pose requires on-device review.
-        electabuzz: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-        // Test variants have their own calibration storage, isolated from the originals.
-        electabuzz_v2: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-        rapidash_v2: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
+        electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
     };
-    const modelLabels = { electabuzz_v2: 'Electabuzz V2 (test)', rapidash_v2: 'Rapidash V2 (test)' };
+    const modelLabels = {
+        magmar: 'Magmar',
+        arcanine: 'Arcanine',
+        raichu: 'Raichu',
+        electrode: 'Electrode'
+    };
     let current = trainer === 'surge' ? 'raichu' : 'magmar';
     let busy = false;
     let marker = null;
@@ -300,7 +295,7 @@
             const video = document.getElementById('arjs-video');
             const canvas = document.querySelector('#scene-host canvas');
             diagnostics.textContent = [
-                'V2.2 mobile debug',
+                'v2.11-hfx-1 mobile debug',
                 'viewport ' + window.innerWidth + 'x' + window.innerHeight,
                 'screen ' + window.screen.width + 'x' + window.screen.height,
                 'body ' + Math.round(document.body.getBoundingClientRect().width),

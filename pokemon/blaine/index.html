@@ -8,21 +8,6 @@
       Blaine · Jageekystuff Interactive
     </title>
     <link href="/assets/styles.css?v=2.2" rel="stylesheet"/>
-    <style>
-      .ar-bottom .choice {
-        display: grid;
-        grid-template-columns: repeat(3,minmax(0,1fr));
-        gap: 7px;
-      }
-      .ar-bottom .choice button {
-        min-width: 0;
-        max-width: 100%;
-        padding: 10px 4px;
-        line-height: 1.25;
-        font-size: clamp(11px,3.2vw,14px);
-        overflow-wrap: anywhere;
-      }
-    </style>
   </head>
   <body class="ar-body" data-trainer="blaine">
     <main>
@@ -47,15 +32,12 @@
           <button aria-pressed="false" data-pokemon="arcanine" type="button">
             Arcanine
           </button>
-          <button aria-pressed="false" data-pokemon="rapidash_v2" type="button">
-            Rapidash V2 (test)
-          </button>
         </div>
         <p>
           <a class="guide-link" href="/credits/">
             Model credits
           </a>
-          · Magmar and Arcanine calibrated · Rapidash V2 is experimental (flames may render white)
+          · Magmar and Arcanine calibrated
         </p>
         <p>
           AR test with 3D Pokémon models. Point at the
@@ -176,7 +158,7 @@
     </main>
     <div aria-label="AR controls" class="ar-ui-layer" id="ar-ui-layer">
     </div>
-    <script defer="" src="/assets/ar-demo.js?v=2.11">
+    <script defer="" src="/assets/ar-demo.js?v=2.11-hfx-1">
     </script>
   </body>
 </html>
