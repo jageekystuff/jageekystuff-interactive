@@ -1,6 +1,7 @@
 /* Jageekystuff Interactive — AR model calibration prototype.
    Uploaded GLB files stay unchanged; dimensions are normalized at runtime.
-   AR.js marker tracking remains the previously validated HIRO setup. */
+   Version 2.12 tests a per-trainer QR pattern marker.
+   Use ?marker=hiro to switch back to the validated HIRO setup. */
 (function () {
     'use strict';
     const start = document.getElementById('start');
@@ -10,6 +11,9 @@
     const bootStatus = document.getElementById('boot-status');
     const choiceButtons = Array.from(document.querySelectorAll('[data-pokemon]'));
     const trainer = document.body.dataset.trainer;
+    const useHiro = new URLSearchParams(window.location.search).get('marker') === 'hiro';
+    const markerLabel = useHiro ? 'HIRO test marker' : `${trainer === 'surge' ? 'Lt. Surge' : 'Blaine'} QR marker`;
+    const markerPath = `/assets/markers/${trainer}.patt`;
     const toggle = document.getElementById('open-adjustments');
     const panel = document.getElementById('ar-adjustments');
     const close = document.getElementById('close-adjustments');
@@ -41,6 +45,15 @@
         raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
         electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
     };
+    // Card marker is 19 cm wide; one marker unit represents approximately 19 cm.
+    // Larger defaults for the card will be calibrated on the physical cosplay.
+    // Do not overwrite the previously approved HIRO calibration.
+    if (!useHiro) {
+        for (const setting of Object.values(defaults)) {
+            setting.height = Math.max(3.5, setting.height);
+            setting.x = setting.x < 0 ? -2.0 : 2.0;
+        }
+    }
     const modelLabels = {
         magmar: 'Magmar',
         arcanine: 'Arcanine',
@@ -56,7 +69,7 @@
     function getSettings(name) {
         const base = defaults[name] || defaults.magmar;
         try {
-            const stored = JSON.parse(localStorage.getItem('jageekystuff-calibration-' + name) || '{}');
+            const stored = JSON.parse(localStorage.getItem('jageekystuff-calibration-' + (useHiro ? '' : 'card-') + name) || '{}');
             return Object.fromEntries(Object.keys(base).map(key => [key,
                 Number.isFinite(Number(stored[key])) ? Number(stored[key]) : base[key]
             ]));
@@ -114,7 +127,7 @@
     }
     function storeCurrent() {
         try {
-            localStorage.setItem('jageekystuff-calibration-' + current, JSON.stringify(settings[current]));
+            localStorage.setItem('jageekystuff-calibration-' + (useHiro ? '' : 'card-') + current, JSON.stringify(settings[current]));
         }
         catch { /* Browsers blocking local storage can still use the sliders. */ }
     }
@@ -204,7 +217,7 @@
                 sizeInfo = (modelLabels[name] || name.charAt(0).toUpperCase() + name.slice(1)) + ': ' + realHeight.toFixed(2) + ' → ' + targetHeight.toFixed(2) + ' marker units';
                 info.textContent = sizeInfo;
                 applyPlacement();
-                setStatus(marker?.object3D?.visible ? '✓ Marker found · ' + (modelLabels[name] || name) + ' ready' : (modelLabels[name] || name) + ' loaded · Aim at HIRO');
+                setStatus(marker?.object3D?.visible ? '✓ Marker found · ' + (modelLabels[name] || name) + ' ready' : (modelLabels[name] || name) + ' loaded · Aim at ' + markerLabel);
             }
             catch (error) {
                 info.textContent = 'Model fit failed: ' + error.message;
@@ -232,8 +245,12 @@
         const portrait = window.innerHeight > window.innerWidth;
         const sourceWidth = portrait ? 480 : 640;
         const sourceHeight = portrait ? 640 : 480;
-        sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; colorManagement: true" arjs="sourceType: webcam; sourceWidth: ${sourceWidth}; sourceHeight: ${sourceHeight}; displayWidth: ${sourceWidth}; displayHeight: ${sourceHeight}; debugUIEnabled: false; trackingMethod: best; detectionMode: mono;" loading-screen="enabled: false">
-      <a-marker id="demo-marker" preset="hiro" emitevents="true" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
+        const markerAttributes = useHiro
+            ? 'preset="hiro"'
+            : `type="pattern" url="${markerPath}"`;
+        const patternRatio = useHiro ? 0.5 : 0.79; // 15 cm inner QR / 19 cm outer black marker.
+        sceneHost.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; colorManagement: true" arjs="sourceType: webcam; sourceWidth: ${sourceWidth}; sourceHeight: ${sourceHeight}; displayWidth: ${sourceWidth}; displayHeight: ${sourceHeight}; debugUIEnabled: false; trackingMethod: best; detectionMode: mono; patternRatio: ${patternRatio};" loading-screen="enabled: false">
+      <a-marker id="demo-marker" ${markerAttributes} emitevents="true" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
         <a-entity id="model-placement" position="1.55 0.18 0"></a-entity>
       </a-marker>
       <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
@@ -242,8 +259,8 @@
     </a-scene>`;
         marker = document.getElementById('demo-marker');
         marker.addEventListener('markerFound', () => setStatus(realHeight ? '✓ Marker found · ' + current + ' ready' : '✓ Marker found · Loading model…'));
-        marker.addEventListener('markerLost', () => setStatus('Aim at the HIRO marker'));
-        setStatus('Starting camera… Aim at HIRO');
+        marker.addEventListener('markerLost', () => setStatus('Aim at ' + markerLabel));
+        setStatus('Starting camera… Aim at ' + markerLabel);
         selectPokemon(current);
     }
     choiceButtons.forEach(btn => btn.addEventListener('click', () => selectPokemon(btn.dataset.pokemon)));
@@ -295,7 +312,7 @@
             const video = document.getElementById('arjs-video');
             const canvas = document.querySelector('#scene-host canvas');
             diagnostics.textContent = [
-                'v2.11-hfx-1 mobile debug',
+                'v2.12 QR marker debug',
                 'viewport ' + window.innerWidth + 'x' + window.innerHeight,
                 'screen ' + window.screen.width + 'x' + window.screen.height,
                 'body ' + Math.round(document.body.getBoundingClientRect().width),

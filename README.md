@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.11-hfx-1` · **Status:** experimental / work in progress
+**Current version:** `2.12` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -13,7 +13,7 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 | Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Approved and calibrated on Android with HIRO |
 | Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Approved and calibrated on Android with HIRO |
 
-**v2.11-hfx-1 cleanup:** Experimental Electabuzz and Rapidash models and their selectors were removed after phone testing. Only the four accepted `.glb` files remain in this snapshot. The earlier models and their credits are preserved in Git history, not deployed. This hotfix does not change the validated Android camera, marker-tracking or calibration implementation.
+**v2.12 cleanup:** Experimental Electabuzz and Rapidash models and their selectors were removed after phone testing. Only the four accepted `.glb` files remain in this snapshot. The earlier models and their credits are preserved in Git history, not deployed. This hotfix does not change the validated Android camera, marker-tracking or calibration implementation.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -83,7 +83,7 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 ## Hotfix labels and clean deployments
 
-After a published minor release, small follow-up fixes use `v2.11-hfx-1`,
+After a published minor release, small follow-up fixes use `v2.12`,
 `v2.11-hfx-2`, etc., without advancing to v2.12. This is a custom naming
 convention rather than standard SemVer.
 
@@ -113,3 +113,7 @@ Replacing the working files but preserving `.git/` lets Git detect deletions.
 The website lists current model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including **Electrode** by `nguyenlouis32` and **Arcanine** by `Chechorams16` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Historical attribution for withdrawn Electabuzz/Rapidash assets is retained in the Git history and [CHANGELOG.md](CHANGELOG.md).
 
 **Attribution for Magmar and Raichu still needs to be completed** once original asset links and licenses are confirmed. A model maker's license does not imply rights to the underlying Pokémon character. This repository does not provide a blanket license for its source code or third-party models.
+
+## Custom QR-marker testing (v2.12)
+
+The physical card QR and AR pattern marker are combined in one 19 cm marker containing a 15 cm QR. See [`docs/QR_AR_MARKER_V2.12.md`](docs/QR_AR_MARKER_V2.12.md) for exact positions, downloads and the HIRO fallback. This remains **experimental until verified on phones**.

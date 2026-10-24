@@ -1,3 +1,12 @@
+## [2.12] - 2026-10-24
+
+- Added separate URL QR + AR.js pattern-marker artwork for Blaine and Lt. Surge.
+- Preserved the QR at exactly 15 × 15 cm, X=50 cm, Y=76 cm, plus an external 19 × 19 cm black tracking frame at X=48 cm, Y=74 cm.
+- Added generated `.patt` files and marker-specific WebAR pages; the HIRO fallback remains available with `?marker=hiro`.
+- Kept separate local calibration for the new physical-marker mode and larger test slider ranges; current HIRO calibration preserved.
+- Added exact print specifications, QR validation and an explicit warning that pattern recognition on phone remains unverified.
+- No change to the four approved 3D models, iOS compatibility backlog or translations.
+
 # Changelog — Jageekystuff Interactive Experiences
 
 Project release history, newest first. Each newly delivered revision increments the **minor version component by one** (`2.8 → 2.9 → 2.10`), not as a decimal fraction; a major release is a separate, intentional decision. These are project release labels rather than one version per Git commit.
