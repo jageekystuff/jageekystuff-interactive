@@ -1,3 +1,20 @@
+# Changelog — Jageekystuff Interactive Experiences
+
+Project release history, newest first. Each newly delivered revision increments the **minor version component by one** (`2.8 → 2.9 → 2.10`), not as a decimal fraction; a major release is a separate, intentional decision. These are project release labels rather than one version per Git commit.
+
+The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
+
+## [2.12-hfx-1] — 2026-10-24
+
+### Fixed
+- Corrected the homepage release label (previously displayed `v2.11-hfx-1` on `v2.12`).
+- Fixed outdated and contradictory copy about the custom QR-markers and HIRO fallback.
+- Updated README release and hotfix descriptions for the current state.
+- Added non-blocking homepage version display based on the root `VERSION` file, with a static fallback for local previews.
+
+### Unchanged
+- AR.js marker-tracking implementation, camera behavior, Pokémon models, and calibration values are unchanged.
+
 ## [2.12] - 2026-10-24
 
 - Added separate URL QR + AR.js pattern-marker artwork for Blaine and Lt. Surge.
@@ -6,12 +23,6 @@
 - Kept separate local calibration for the new physical-marker mode and larger test slider ranges; current HIRO calibration preserved.
 - Added exact print specifications, QR validation and an explicit warning that pattern recognition on phone remains unverified.
 - No change to the four approved 3D models, iOS compatibility backlog or translations.
-
-# Changelog — Jageekystuff Interactive Experiences
-
-Project release history, newest first. Each newly delivered revision increments the **minor version component by one** (`2.8 → 2.9 → 2.10`), not as a decimal fraction; a major release is a separate, intentional decision. These are project release labels rather than one version per Git commit.
-
-The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
 ## [2.11-hfx-1] — 2026-10-24
 

@@ -50,7 +50,7 @@
               Blaine
             </h2>
             <p>
-              Meet Magmar and Arcanine in augmented reality. Both models have been calibrated using the the QR-marker on the trainer card.
+              Meet Magmar and Arcanine in augmented reality. Both models were calibrated with the HIRO test marker. Our custom card QR-marker is being tested.
             </p>
             <div class="pills">
               <span>
@@ -72,7 +72,7 @@
               Lt. Surge
             </h2>
             <p>
-              Summon Raichu or Electrode in augmented reality. Both models have been calibrated using the the QR-marker on the trainer card.
+              Summon Raichu or Electrode in augmented reality. Both models were calibrated with the HIRO test marker. Our custom card QR-marker is being tested.
             </p>
             <div class="pills">
               <span>
@@ -89,14 +89,23 @@
         </section>
         <div class="notice">
           <h3>
-            🧪 Prototype v2.11-hfx-1
+            🧪 Prototype <span id="release-version">v2.12-hfx-1</span>
           </h3>
           <p>
-            The camera tracking works with a
-            <a href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" rel="noopener noreferrer" target="_blank">
-              temporary the QR-marker on the trainer card
-            </a>
-            . The current selection contains four approved, calibrated models: Magmar and Arcanine for Blaine, and Raichu and Electrode for Lt. Surge. We continue using HIRO until the physical cosplay cards have their own AR targets.
+            We're testing custom QR-markers for Blaine and Lt. Surge. Scan the QR on
+            a trainer card to open its experience, then point your camera at the
+            same printed QR-marker to summon a Pokémon.
+          </p>
+          <p>
+            Four Pokémon are currently available: Magmar and Arcanine for Blaine;
+            Raichu and Electrode for Lt. Surge. Custom QR-marker tracking still
+            needs to be validated on real phones. The
+            <a
+              href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png"
+              rel="noopener noreferrer"
+              target="_blank"
+            >HIRO test marker</a>
+            remains available as a fallback inside each AR experience.
           </p>
         </div>
         <p style="margin-top:26px;text-align:center">
@@ -116,5 +125,22 @@
         </span>
       </div>
     </footer>
+    <script>
+      // Keep the homepage release label synchronized with the VERSION file.
+      fetch('/VERSION', { cache: 'no-store' })
+        .then((response) => {
+          if (!response.ok) throw new Error('VERSION unavailable');
+          return response.text();
+        })
+        .then((version) => {
+          const label = document.getElementById('release-version');
+          if (label && version.trim()) {
+            label.textContent = `v${version.trim()}`;
+          }
+        })
+        .catch(() => {
+          // Keep the hard-coded fallback label for local or offline previews.
+        });
+    </script>
   </body>
 </html>

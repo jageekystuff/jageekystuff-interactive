@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.12` · **Status:** experimental / work in progress
+**Current version:** `2.12-hfx-1` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -13,7 +13,7 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 | Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Approved and calibrated on Android with HIRO |
 | Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Approved and calibrated on Android with HIRO |
 
-**v2.12 cleanup:** Experimental Electabuzz and Rapidash models and their selectors were removed after phone testing. Only the four accepted `.glb` files remain in this snapshot. The earlier models and their credits are preserved in Git history, not deployed. This hotfix does not change the validated Android camera, marker-tracking or calibration implementation.
+**Model selection:** Only the four accepted `.glb` files remain in the current site: Magmar, Arcanine, Raichu and Electrode. Electabuzz/Rapidash experiments were withdrawn in `v2.11-hfx-1`; they remain in Git history. The current QR-marker experiment (`v2.12`) has not yet been validated on physical cards.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -21,13 +21,13 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 ## How it works
 
 1. The visitor scans the trainer card's **AR QR code**, which opens the trainer's page in a browser.
-2. They grant camera access and point the camera at the **HIRO test marker** (for now).
+2. They grant camera access and point at the **custom QR-marker** on the trainer card (experimental). For verified Android tracking, use the **HIRO fallback** (`?marker=hiro`).
 3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
 4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
 
 **Calibrated Raichu, Electrode and Arcanine HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
 
-**Current limitation:** The actual cosplay cards do **not** yet have their own trained marker. The QR-to-AR-marker design still needs implementation and real-size testing. No final printed QR/marker artwork is included yet.
+**Current limitation:** Custom QR-marker artwork and `.patt` files are included as experimental assets. Recognition with physical cards and real-world shooting distances has **not** yet been validated. Do not print or glue permanent QR markers before testing.
 
 For the test marker, see [HIRO](https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png). Show or print it separately while testing with a phone.
 
@@ -83,21 +83,22 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 ## Hotfix labels and clean deployments
 
-After a published minor release, small follow-up fixes use `v2.12`,
-`v2.11-hfx-2`, etc., without advancing to v2.12. This is a custom naming
-convention rather than standard SemVer.
+After a published minor release, small follow-up fixes use a suffix, for
+example `v2.12-hfx-1`, `v2.12-hfx-2`, without advancing to `v2.13`.
+The next regular release after `v2.12` is `v2.13`. This is a custom naming
+convention rather than strict SemVer.
 
 This release is a **complete site snapshot**. Its four model files are:
-`magmar.glb`, `arcanine.glb`, `raichu.glb`, `electrode.glb`. Old Electabuzz
-and Rapidash GLBs should be deleted from the local working tree and from
-version control in this commit; they remain recoverable through Git history.
+`magmar.glb`, `arcanine.glb`, `raichu.glb`, `electrode.glb`.
+The experimental Electabuzz/Rapidash models were removed in `v2.11-hfx-1`
+and remain recoverable through Git history.
 
 Keep the repository's `.git/` directory when refreshing the project locally.
 Replacing the working files but preserving `.git/` lets Git detect deletions.
 
 ## Planned (not yet implemented)
 
-- Create and validate QR + AR image targets integrated into the physical cosplay cards, replacing the temporary HIRO marker.
+- Validate the included custom QR-marker targets on actual phones and physical cosplay cards before replacing the HIRO fallback.
 - Test the final-sized printed markers and Pokémon placement beside the cosplayers.
 - Review mobile iOS/Safari appearance and marker orientation issues; see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
 - Add photo capture and language selection (Italian default, English and Spanish) after the core interaction is stable.
@@ -114,6 +115,6 @@ The website lists current model-specific attributions on [Credits & Acknowledgem
 
 **Attribution for Magmar and Raichu still needs to be completed** once original asset links and licenses are confirmed. A model maker's license does not imply rights to the underlying Pokémon character. This repository does not provide a blanket license for its source code or third-party models.
 
-## Custom QR-marker testing (v2.12)
+## Custom QR-marker testing (v2.12 and v2.12-hfx-1)
 
-The physical card QR and AR pattern marker are combined in one 19 cm marker containing a 15 cm QR. See [`docs/QR_AR_MARKER_V2.12.md`](docs/QR_AR_MARKER_V2.12.md) for exact positions, downloads and the HIRO fallback. This remains **experimental until verified on phones**.
+The planned physical card QR and AR pattern marker are combined in one 19 cm marker containing a 15 cm QR. See [`docs/QR_AR_MARKER_V2.12.md`](docs/QR_AR_MARKER_V2.12.md) for exact positions, downloads and the HIRO fallback. This remains **experimental until verified on phones**.
