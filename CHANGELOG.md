@@ -4,6 +4,18 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.10] — 2026-10-24
+
+### Changed
+- Reposed **Electabuzz** into an experimental raised, bent-arms flex pose inspired by an anime reference. This is a **static geometry edit**, not rigging or animation. Hands remain open, and shoulder/elbow joins must be checked on a real device. The original model is still available for rollback.
+- Confirmed **Arcanine** default on Android HIRO (`height=1.05`, `yaw=0`, `pitch=-85`, `roll=0`, `x=0.3`, `y=0`, `z=0.5`). The existing correct configuration is retained.
+- **Removed Rapidash from Blaine’s selector** because its pale flames are not acceptable for the intended normal form. The current GLB is kept only as a legacy asset and is no longer loaded. A better model will be evaluated separately.
+- Updated **homepage** to list the currently available five Pokémon and explain the temporary HIRO marker; removed outdated “Arcanine coming later” and Raichu-only descriptions.
+- Updated Electabuzz modification notice and current state in model credits, README and VERSION.
+
+### Deferred
+- No animations, new camera behaviors, final QR markers, internationalization or iOS bug fixes are included in this release.
+
 ## [2.9] — 2026-10-23
 
 ### Added

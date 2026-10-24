@@ -33,20 +33,19 @@
     raichu: '/assets/models/raichu.glb',
     electrode: '/assets/models/electrode.glb',
     electabuzz: '/assets/models/electabuzz.glb',
-    arcanine: '/assets/models/arcanine.glb',
-    rapidash: '/assets/models/rapidash.glb'
+    arcanine: '/assets/models/arcanine.glb'
+    // Rapidash deliberately disabled until a suitable normal-colored model is found.
   };
   // Height is the height of the character in units relative to the HIRO marker.
-  // Magmar, Raichu, Electrode and Electabuzz calibrated in HIRO marker tests.
-  // Electabuzz mesh was re-posed experimentally; Arcanine and Rapidash need calibration.
+  // Magmar, Raichu, Electrode, Electabuzz and Arcanine calibrated on HIRO.
+  // Electabuzz arms-up mesh is an experimental static pose. Rapidash hidden pending replacement.
   const defaults = {
     magmar: { height: 1.4, yaw: 0, pitch: -75, roll: 0, x: -0.2, y: 0, z: 0.7 },
     arcanine: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-    rapidash: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
     raichu: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
     // Electrode HIRO preset confirmed with the following values on 2026-10-23.
     electrode: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 },
-    // Electabuzz calibrated on Xiaomi 2026-10-23; experimental lowered-arms mesh needs visual approval.
+    // Electabuzz calibrated 2026-10-23; experimental bent-arm/flex pose requires on-device review.
     electabuzz: { height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5 }
   };
   let current = trainer === 'surge' ? 'raichu' : 'magmar';

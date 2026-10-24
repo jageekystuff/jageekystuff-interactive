@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.9` · **Status:** experimental / work in progress
+**Current version:** `2.10` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -10,10 +10,10 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
-| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine, Rapidash | Magmar calibrated; Arcanine and Rapidash await on-device calibration; Rapidash provisional |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | All three calibrated on HIRO; Electabuzz lowered-arm pose experimental |
+| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Both calibrated in Android HIRO tests; Rapidash temporarily unavailable |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | All three calibrated on HIRO; Electabuzz raised bent-arm pose experimental |
 
-All six Pokémon models are now selectable. Arcanine and Rapidash have provisional orientations pending HIRO-marker calibration. Rapidash uses its creator’s original white/gray flames and is marked provisional. Electabuzz includes an experimental lowered-arms mesh edited via code; its original GLB is retained as `assets/models/electabuzz-original.glb` for easy rollback.
+**Five Pokémon are selectable**: Magmar and Arcanine (Blaine), Raichu, Electrode and Electabuzz (Lt. Surge). Rapidash was temporarily available in v2.9 but **is disabled in v2.10**, pending a better normal-color model. The old Rapidash GLB is retained as a legacy asset and is not loaded by the current experience. Arcanine’s calibration is confirmed on Android with `height=1.05, yaw=0, pitch=-85, roll=0, x=0.3, y=0, z=0.5`. Electabuzz now uses an **experimental flex/raised bent-arms mesh**, edited through code (not animated). Its original GLB is retained as `assets/models/electabuzz-original.glb` for rollback.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -25,7 +25,7 @@ All six Pokémon models are now selectable. Arcanine and Rapidash have provision
 3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
 4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
 
-**Calibrated Raichu and Electrode HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
+**Calibrated Raichu, Electrode, Electabuzz and Arcanine HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
 
 **Current limitation:** The actual cosplay cards do **not** yet have their own trained marker. The QR-to-AR-marker design still needs implementation and real-size testing. No final printed QR/marker artwork is included yet.
 
@@ -74,7 +74,7 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 ## Planned (not yet implemented)
 
-- Calibrate Arcanine and Rapidash on a real device; verify Electabuzz’s experimental lowered-arm pose on mobile and restore the original if the geometry looks wrong.
+- Evaluate Electabuzz’s experimental raised bent-arms pose on Android/iOS; look for a better-colored normal Rapidash model before restoring its selector option.
 - Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
 - Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
 - Keep the social media QR separate from the AR QR on the physical card.
@@ -86,6 +86,6 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 **Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
-The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, Electabuzz and Rapidash by `nguyenlouis32`, and Arcanine by `Chechorams16`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, Electabuzz and archived Rapidash by `nguyenlouis32`, and Arcanine by `Chechorams16`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 **Attribution for Magmar and Raichu needs to be completed** once the original asset links and terms are confirmed. Do not interpret a model creator's license as a license to the underlying Pokémon character. This repository does not currently grant a blanket license for its code or third-party assets.
