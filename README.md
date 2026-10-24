@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.10` · **Status:** experimental / work in progress
+**Current version:** `2.11` · **Status:** experimental / work in progress
 
 Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
 
@@ -10,10 +10,10 @@ This is an **unofficial, non-commercial fan project** and is not affiliated with
 
 | Experience | Link | 3D models | Status |
 | --- | --- | --- | --- |
-| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Both calibrated in Android HIRO tests; Rapidash temporarily unavailable |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz | All three calibrated on HIRO; Electabuzz raised bent-arm pose experimental |
+| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine, **Rapidash V2 (test)** | First two calibrated; new Rapidash is experimental and may still show white flames |
+| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode, Electabuzz, **Electabuzz V2 (test)** | First three calibrated; alternative Electabuzz is uncalibrated and still needs a pose review |
 
-**Five Pokémon are selectable**: Magmar and Arcanine (Blaine), Raichu, Electrode and Electabuzz (Lt. Surge). Rapidash was temporarily available in v2.9 but **is disabled in v2.10**, pending a better normal-color model. The old Rapidash GLB is retained as a legacy asset and is not loaded by the current experience. Arcanine’s calibration is confirmed on Android with `height=1.05, yaw=0, pitch=-85, roll=0, x=0.3, y=0, z=0.5`. Electabuzz now uses an **experimental flex/raised bent-arms mesh**, edited through code (not animated). Its original GLB is retained as `assets/models/electabuzz-original.glb` for rollback.
+**Five original roster slots are retained, plus two optional V2 test models**: Blaine's Magmar and Arcanine with a test-only Rapidash V2; Surge's Raichu, Electrode and the existing Electabuzz with a new Electabuzz V2 test. The prior Rapidash model stays archived; its appearance has not been approved. All existing calibrated models preserve their settings. Experimental models have their own calibration keys and are not considered stable until reviewed on phones.
 
 **Project website:** https://jageekystuff-interactive.pages.dev/  
 **Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
@@ -54,6 +54,15 @@ docs/KNOWN_ISSUES.md           Deferred compatibility bugs
 VERSION                        Current project version
 ```
 
+## Code formatting
+
+Source files are written in **readable, multiline form** and follow the project's
+`.prettierrc.json` and `.editorconfig` configuration. Use **Prettier** in VS Code
+(`Format Document`) for HTML, CSS, and JavaScript. Keep 2-space indentation,
+UTF-8 encoding, and LF line endings. Do not commit minified HTML/CSS/JS as
+application source. Formatted source files are served directly by Cloudflare Pages;
+no extra build step is required. The `.glb` models are binary and must not be formatted.
+
 ## Contributing an update / deployment
 
 1. Modify the files in the repository, keeping the same folder structure.
@@ -72,9 +81,22 @@ This is a **simplified project convention inspired by [Semantic Versioning](http
 
 Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered release. Never reuse a published release label for different contents.
 
+## Experimental model variants — v2.11
+
+The currently validated models are **preserved without replacement**. Two additional GLBs have been added solely for testing:
+
+- `assets/models/electabuzz_v2.glb` — alternative source model by Chechorams16 with a skeletal rig, but no embedded animation. Choose **Electabuzz V2 (test)** on the Surge page. It has a separate browser calibration key: `electabuzz_v2`.
+- `assets/models/rapidash_v2.glb` — alternative source model by Nhiny Jinromon; contains strong white emissive flame materials that might still look incorrect in AR. Choose **Rapidash V2 (test)** on the Blaine page. Separate key: `rapidash_v2`.
+
+The original `electabuzz.glb`, archived `electabuzz-original.glb`, and archived `rapidash.glb` are not overwritten. The V2 assets contain no new animations. **Do not treat V2 alternatives as approved production models until they pass on-device evaluation.**
+
+### Test/hotfix release convention
+
+Stable minor revisions proceed `2.10 → 2.11 → 2.12`. If a targeted fix is needed for release `2.11` before moving to `2.12`, use the project-specific label `v2.11-hfx-1` (then `v2.11-hfx-2`, if required). This is a project convention, not strict Semantic Versioning. Document the fix in `CHANGELOG.md` while preserving the planned minor-version sequence.
+
 ## Planned (not yet implemented)
 
-- Evaluate Electabuzz’s experimental raised bent-arms pose on Android/iOS; look for a better-colored normal Rapidash model before restoring its selector option.
+- Compare Electabuzz V2 and Rapidash V2 on Android/iOS. Decide whether to adopt the new variants, refine a pose, or find a better normal-color Rapidash before making it a permanent option.
 - Retest Electrode calibration on iOS; current HIRO preset is confirmed in on-device Android tests.
 - Replace HIRO with **one QR code that also works with a recognizable AR target**, using the physical cosplay card; validate it at its real printed size.
 - Keep the social media QR separate from the AR QR on the physical card.
@@ -86,6 +108,6 @@ Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered relea
 
 **Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
 
-The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, Electabuzz and archived Rapidash by `nguyenlouis32`, and Arcanine by `Chechorams16`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The website lists model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including Electrode, original Electabuzz and archived Rapidash by `nguyenlouis32`, Arcanine and Electabuzz V2 by `Chechorams16`, and Rapidash V2 by `Nhiny Jinromon`, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 **Attribution for Magmar and Raichu needs to be completed** once the original asset links and terms are confirmed. Do not interpret a model creator's license as a license to the underlying Pokémon character. This repository does not currently grant a blanket license for its code or third-party assets.

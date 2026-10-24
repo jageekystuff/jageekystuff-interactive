@@ -1,20 +1,186 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#131a2c"><title>Lt. Surge · Jageekystuff Interactive</title><link rel="stylesheet" href="/assets/styles.css?v=2.2"><style>
-/* v2.8: compact three-Pokémon selector on narrow phone screens. */
-.ar-bottom .choice{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.ar-bottom .choice button{min-width:0;max-width:100%;padding:10px 4px;line-height:1.25;font-size:clamp(11px,3.2vw,14px);overflow-wrap:anywhere}
-</style></head><body class="ar-body" data-trainer="surge"><main><div class="ar-scene" id="scene-host" aria-label="Augmented reality camera scene"></div><div class="ar-header"><a class="mini-brand" href="/">← Jageekystuff</a><span id="ar-status" class="ar-status" role="status">AR not started</span></div><section class="ar-bottom"><strong>⚡ Lt. Surge · Your partner</strong><div class="choice"><button type="button" data-pokemon="raichu" aria-pressed="true">Raichu</button><button type="button" data-pokemon="electrode" aria-pressed="false">Electrode</button><button type="button" data-pokemon="electabuzz" aria-pressed="false">Electabuzz</button></div><p><a class="guide-link" href="/credits/">Model credits</a> · Electabuzz raised-arms pose (experimental)</p><p>AR test with 3D Pokémon models. Point at the <a class="guide-link" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank" rel="noopener noreferrer">HIRO test marker ↗</a> displayed on another screen or printed.</p></section><button type="button" class="adjust-toggle" id="open-adjustments" aria-expanded="false" aria-controls="ar-adjustments">⚙ Ajustar 3D</button>
-<div id="ar-adjustments" class="adjust-panel hidden" role="region" aria-label="3D model calibration">
-  <div class="adjust-head"><strong>3D calibration (test)</strong><button type="button" id="close-adjustments" aria-label="Close adjustments">✕</button></div>
-  <p id="model-info" class="adjust-note" role="status">Point at HIRO after starting the camera.</p>
-  <div class="adjust-grid">
-    <label>Height <output data-out="height">1.30</output><input data-adjust="height" type="range" min="0.3" max="2.6" step="0.05"></label>
-    <label>Turn left/right <output data-out="yaw">0</output>°<input data-adjust="yaw" type="range" min="-180" max="180" step="5"></label>
-    <label>Tilt forward/back <output data-out="pitch">0</output>°<input data-adjust="pitch" type="range" min="-180" max="180" step="5"></label>
-    <label>Side tilt <output data-out="roll">0</output>°<input data-adjust="roll" type="range" min="-180" max="180" step="5"></label>
-    <label>Left/right position <output data-out="x">1.55</output><input data-adjust="x" type="range" min="-3" max="3" step="0.05"></label>
-    <label>Up/down position <output data-out="y">0.18</output><input data-adjust="y" type="range" min="-1.5" max="2" step="0.05"></label>
-    <label>Depth <output data-out="z">0.00</output><input data-adjust="z" type="range" min="-2" max="2" step="0.05"></label>
-  </div>
-  <div class="adjust-actions"><button type="button" id="reset-adjustments">Reset</button><button type="button" id="copy-adjustments">Copy settings</button></div>
-  <p class="adjust-note" id="adjust-feedback" aria-live="polite">These settings are only for your testing device.</p>
-</div><div class="ar-start" id="start"><div class="start-card"><div class="scan-icon">⚡</div><div class="eyebrow">Fan-made cosplay AR test</div><h1>Meet Surge's partner</h1><p>Grant camera access, then point at a printed HIRO marker. A scaled 3D Pokémon model should appear beside it. Adjust its orientation with the on-screen controls.</p><a class="button outline" target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png">View test marker ↗</a><button class="button" id="launch" type="button">Start AR camera</button><p id="boot-status" class="small-note" role="status" aria-live="polite"></p><p class="small-note">Camera permission required · Works best in a modern mobile browser over HTTPS.</p></div></div></main><div id="ar-ui-layer" class="ar-ui-layer" aria-label="AR controls"></div><script defer src="/assets/ar-demo.js?v=2.10"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+    <meta content="#131a2c" name="theme-color"/>
+    <title>
+      Lt. Surge · Jageekystuff Interactive
+    </title>
+    <link href="/assets/styles.css?v=2.2" rel="stylesheet"/>
+    <style>
+      /* v2.11: 2-by-2 grid for three main Pokémon plus Electabuzz V2 comparison. */
+      .ar-bottom .choice {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 7px;
+      }
+      .ar-bottom .choice button {
+        min-width: 0;
+        max-width: 100%;
+        padding: 10px 4px;
+        line-height: 1.25;
+        font-size: clamp(11px,3.2vw,14px);
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body class="ar-body" data-trainer="surge">
+    <main>
+      <div aria-label="Augmented reality camera scene" class="ar-scene" id="scene-host">
+      </div>
+      <div class="ar-header">
+        <a class="mini-brand" href="/">
+          ← Jageekystuff
+        </a>
+        <span class="ar-status" id="ar-status" role="status">
+          AR not started
+        </span>
+      </div>
+      <section class="ar-bottom">
+        <strong>
+          ⚡ Lt. Surge · Your partner
+        </strong>
+        <div class="choice">
+          <button aria-pressed="true" data-pokemon="raichu" type="button">
+            Raichu
+          </button>
+          <button aria-pressed="false" data-pokemon="electrode" type="button">
+            Electrode
+          </button>
+          <button aria-pressed="false" data-pokemon="electabuzz" type="button">
+            Electabuzz
+          </button>
+          <button aria-pressed="false" data-pokemon="electabuzz_v2" type="button">
+            Electabuzz V2 (test)
+          </button>
+        </div>
+        <p>
+          <a class="guide-link" href="/credits/">
+            Model credits
+          </a>
+          · Electabuzz V2 is a separate original-pose test; existing raised-arms model remains available
+        </p>
+        <p>
+          AR test with 3D Pokémon models. Point at the
+          <a class="guide-link" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" rel="noopener noreferrer" target="_blank">
+            HIRO test marker ↗
+          </a>
+          displayed on another screen or printed.
+        </p>
+      </section>
+      <button aria-controls="ar-adjustments" aria-expanded="false" class="adjust-toggle" id="open-adjustments" type="button">
+        ⚙ Ajustar 3D
+      </button>
+      <div aria-label="3D model calibration" class="adjust-panel hidden" id="ar-adjustments" role="region">
+        <div class="adjust-head">
+          <strong>
+            3D calibration (test)
+          </strong>
+          <button aria-label="Close adjustments" id="close-adjustments" type="button">
+            ✕
+          </button>
+        </div>
+        <p class="adjust-note" id="model-info" role="status">
+          Point at HIRO after starting the camera.
+        </p>
+        <div class="adjust-grid">
+          <label>
+            Height
+            <output data-out="height">
+              1.30
+            </output>
+            <input data-adjust="height" max="2.6" min="0.3" step="0.05" type="range"/>
+          </label>
+          <label>
+            Turn left/right
+            <output data-out="yaw">
+              0
+            </output>
+            °
+            <input data-adjust="yaw" max="180" min="-180" step="5" type="range"/>
+          </label>
+          <label>
+            Tilt forward/back
+            <output data-out="pitch">
+              0
+            </output>
+            °
+            <input data-adjust="pitch" max="180" min="-180" step="5" type="range"/>
+          </label>
+          <label>
+            Side tilt
+            <output data-out="roll">
+              0
+            </output>
+            °
+            <input data-adjust="roll" max="180" min="-180" step="5" type="range"/>
+          </label>
+          <label>
+            Left/right position
+            <output data-out="x">
+              1.55
+            </output>
+            <input data-adjust="x" max="3" min="-3" step="0.05" type="range"/>
+          </label>
+          <label>
+            Up/down position
+            <output data-out="y">
+              0.18
+            </output>
+            <input data-adjust="y" max="2" min="-1.5" step="0.05" type="range"/>
+          </label>
+          <label>
+            Depth
+            <output data-out="z">
+              0.00
+            </output>
+            <input data-adjust="z" max="2" min="-2" step="0.05" type="range"/>
+          </label>
+        </div>
+        <div class="adjust-actions">
+          <button id="reset-adjustments" type="button">
+            Reset
+          </button>
+          <button id="copy-adjustments" type="button">
+            Copy settings
+          </button>
+        </div>
+        <p aria-live="polite" class="adjust-note" id="adjust-feedback">
+          These settings are only for your testing device.
+        </p>
+      </div>
+      <div class="ar-start" id="start">
+        <div class="start-card">
+          <div class="scan-icon">
+            ⚡
+          </div>
+          <div class="eyebrow">
+            Fan-made cosplay AR test
+          </div>
+          <h1>
+            Meet Surge's partner
+          </h1>
+          <p>
+            Grant camera access, then point at a printed HIRO marker. A scaled 3D Pokémon model should appear beside it. Adjust its orientation with the on-screen controls.
+          </p>
+          <a class="button outline" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" rel="noopener noreferrer" target="_blank">
+            View test marker ↗
+          </a>
+          <button class="button" id="launch" type="button">
+            Start AR camera
+          </button>
+          <p aria-live="polite" class="small-note" id="boot-status" role="status">
+          </p>
+          <p class="small-note">
+            Camera permission required · Works best in a modern mobile browser over HTTPS.
+          </p>
+        </div>
+      </div>
+    </main>
+    <div aria-label="AR controls" class="ar-ui-layer" id="ar-ui-layer">
+    </div>
+    <script defer="" src="/assets/ar-demo.js?v=2.11">
+    </script>
+  </body>
+</html>

@@ -4,6 +4,21 @@ Project release history, newest first. Each newly delivered revision increments 
 
 The early version descriptions below are reconstructed from the prototypes and the Git commit history shared during development. Git remains the definitive record of individual file changes.
 
+## [2.11] — 2026-10-24
+
+### Added
+- Two separate, optional, **unmodified experimental GLB models**: `electabuzz_v2.glb` from Chechorams16 and `rapidash_v2.glb` from Nhiny Jinromon, both CC BY 4.0 with attribution on `/credits/`.
+- **Electabuzz V2 (test)** button on Lt. Surge alongside the existing Electabuzz, Raichu and Electrode. The new Electabuzz model has a skeletal rig (70 joints) but **no baked animation**; its visible pose is not yet approved.
+- **Rapidash V2 (test)** button on Blaine, retaining existing Magmar and Arcanine. This Rapidash is test-only because its white emissive flame materials may still look incorrect.
+- Independent calibration presets and localStorage keys for each V2 variant, plus corresponding updates to the landing page.
+
+### Unchanged
+- All existing model files, calibration presets, camera settings and HIRO marker logic remain unchanged. This is a model A/B comparison release, **not an animation release**.
+- Preserve previous versions in the project; test bugs may be addressed under the project-specific `v2.11-hfx-1` convention before the next minor version.
+
+### Code formatting
+- Reformatted HTML, CSS, and JavaScript into readable multiline source; added Prettier/EditorConfig formatting rules.
+
 ## [2.10] — 2026-10-24
 
 ### Changed
