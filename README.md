@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current platform release: `v3.0-hfx-1` · Status: experimental / in active testing**
+**Current platform release: `v3.0-hfx-2` · Status: experimental / in active testing**
 
 A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
@@ -75,16 +75,15 @@ V3 converts centimeters to marker units using the marker width as a reference. I
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
 
-## Camera framing: V3.0-hfx-1 (CAM-01)
+## Camera framing: V3.0-hfx-2 (CAM-01)
 
-In V3, open **Ajustar 3D → CAM-01 · Camera framing test** after starting the camera. The camera controls are **developer-only** and are not part of the intended final visitor UI.
+In V3, open **Ajustar 3D → CAM-01 · Matched camera framing** after starting the camera. These controls are for testing, not intended as the final visitor interface.
 
-- **Normal view**: original AR.js fullscreen behavior; the default remains unchanged.
-- **Wide view (test)**: scales camera and WebGL together to reveal more scene around the marker; can show blank bands. Check alignment before using this mode for photos.
-- **Request 1×**: attempts to request 1× only when the browser reports zoom control support. It cannot ensure the same lens or framing as the built-in camera app.
-- **Copy camera diagnostics**: includes reported source dimensions, viewport, rendering boxes, video track zoom settings and estimated horizontal crop. It does not include a photo or any camera frames.
+- **Aligned view (default):** displays the *entire* camera feed and draws 3D models into a renderer of the same visible width and height. On a portrait phone with a 4:3 feed, blank bands above and below the picture are normal; they are not missing camera pixels.
+- **Legacy view (fallback):** restores the previous AR.js fullscreen layout for comparison and troubleshooting if the aligned view causes tracking or pose problems.
+- **Copy camera diagnostics:** reports the actual source dimensions, viewport, camera/canvas rectangles, differences in CSS pixels, renderer buffer, and zoom reported by the browser (if available). `layersAligned: true` means the two rectangles coincide; it does *not* prove 3D marker pose accuracy.
 
-Wide view is an experimental workaround for AR.js' known sizing behavior; do not treat it as a confirmed universal fix until validated on the Xiaomi and iPhone. The four model calibrations remain unchanged pending this check.
+The confusing **Request 1×** button from `v3.0-hfx-1` was removed: the Xiaomi already reported 1×. The browser may still use a physical camera different from the stock camera application. **This hotfix is not yet validated in live AR**, and does not modify the four model calibration presets or V2.
 
 ## How to test V3 on a phone
 
@@ -92,8 +91,9 @@ Wide view is an experimental workaround for AR.js' known sizing behavior; do not
 2. Tap **Start AR camera**, grant permission and aim at that **same printed QR-marker** on a matte, light-colored background.
 3. Choose Blaine or Lt. Surge and then a model; the camera should remain open when you switch.
 4. Use **Ajustar 3D** only for calibration testing. `Reset` reverts to the committed profile; `Copy settings` exports values to send for review.
-5. For diagnostics use `/?marker=hiro` with the HIRO test marker. Note that V3 physical-scale coordinates are still provisional, even with HIRO.
-6. If the unified marker loses tracking, test at 50, 100, 150 and 200 cm and compare contrast and lighting.
+5. First compare Aligned/Legacy view at 100 cm with the printed marker, then again at 200 cm. The QR must remain visible and the 3D model should follow it.
+6. Use **Copy camera diagnostics** and check `videoBox`, `canvasBox`, and `layersAligned`. Keep 3D height calibration for a later test, after camera framing is verified.
+7. For a fallback marker test, open `/?marker=hiro` and point at the HIRO test marker.
 
 The camera, models and pattern recognition cannot be fully validated until this build is deployed and tested on actual Android and iOS devices. The earlier V2 physical-marker and iPhone limitations remain listed in `docs/KNOWN_ISSUES.md`.
 
@@ -104,7 +104,7 @@ The camera, models and pattern recognition cannot be fully validated until this 
 - Cloudflare configuration: **Framework: None**, **Build command: `exit 0`**, **Output directory: `.`** and repository root as root directory.
 - Prettier configuration in `.prettierrc.json`; `.editorconfig` for 2-space indent. Neither overrides your work projects.
 - Update `VERSION`, `README.md` (when relevant) and `CHANGELOG.md` per release. Minor labels use increasing integers; `3.9` goes to `3.10`, never `4.0` just because of the numbering.
-- Hotfix naming is `v3.0-hfx-1` for follow-up fixes to V3.0 without changing the next regular version.
+- Hotfix naming is `v3.0-hfx-2` for follow-up fixes to V3.0 without changing the next regular version.
 
 ## Deferred features — not in V3.0
 

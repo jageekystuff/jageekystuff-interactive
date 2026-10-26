@@ -16,8 +16,8 @@
   const adjustmentsFeedback = document.getElementById('adjust-feedback');
   const cameraDiagnostics = document.getElementById('camera-diagnostics');
   const cameraFeedback = document.getElementById('camera-feedback');
-  const normalCameraButton = document.getElementById('camera-normal');
-  const wideCameraButton = document.getElementById('camera-wide');
+  const alignedCameraButton = document.getElementById('camera-aligned');
+  const legacyCameraButton = document.getElementById('camera-legacy');
   const params = new URLSearchParams(window.location.search);
   const useHiro = params.get('marker') === 'hiro';
 
@@ -151,22 +151,17 @@
     showCurrentModel();
 
     function changeFraming(mode) {
-      engine.setFramingMode(mode);
-      normalCameraButton.setAttribute('aria-pressed', String(mode === 'normal'));
-      wideCameraButton.setAttribute('aria-pressed', String(mode === 'wide'));
-      cameraFeedback.textContent = mode === 'wide' ?
-        'Experimental wide view enabled. Check that the Pokémon stays attached to the QR.' :
-        'Normal AR.js framing restored.';
+      const aligned = mode !== 'legacy';
+      engine.setFramingMode(aligned ? 'aligned' : 'legacy');
+      alignedCameraButton.setAttribute('aria-pressed', String(aligned));
+      legacyCameraButton.setAttribute('aria-pressed', String(!aligned));
+      cameraFeedback.textContent = aligned ?
+        'Aligned mode: full camera image with matching 3D canvas. Blank bands are normal.' :
+        'Legacy mode: original fullscreen AR.js layout restored.';
     }
 
-    normalCameraButton.addEventListener('click', () => changeFraming('normal'));
-    wideCameraButton.addEventListener('click', () => changeFraming('wide'));
-    document.getElementById('camera-one-x').addEventListener('click', async () => {
-      const applied = await engine.requestOneX();
-      cameraFeedback.textContent = applied ?
-        '1× requested; compare with the camera app. Check the zoom value below.' :
-        'Zoom controls are not exposed by this browser.';
-    });
+    alignedCameraButton.addEventListener('click', () => changeFraming('aligned'));
+    legacyCameraButton.addEventListener('click', () => changeFraming('legacy'));
     document.getElementById('copy-camera-diagnostics').addEventListener('click', async () => {
       const text = JSON.stringify(engine.getCameraDiagnostics(), null, 2);
       try {

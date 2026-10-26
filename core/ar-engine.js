@@ -61,67 +61,123 @@
     let cachedModel;
     let currentSettings;
     let markerVisible = false;
-    let framingMode = 'normal';
+    let framingMode = 'aligned';
     let cameraNote = 'Waiting for camera video';
     let diagnosticsTimer;
     const savedTransforms = new WeakMap();
 
-    // Keep camera/video and WebGL in the same screen-space transformation.
-    // Never change a single layer's CSS independently: it breaks AR alignment.
+    // CAM-01: video and renderer must occupy EXACTLY the same rectangle.
+    // In portrait, AR.js can present a landscape camera with a fullscreen
+    // cover crop while the renderer uses a different aspect ratio. Shrinking
+    // both existing elements with CSS transforms does not correct that mismatch.
+    // The aligned mode instead gives A-Frame a viewport with the SAME aspect
+    // ratio as the real video track. That makes the full captured picture
+    // visible, with letterboxing where the device screen is taller.
+    let lastRendererSize = '';
+    let lastViewportSize = '';
+    let listenersAdded = false;
+
     function videoElement() {
       return document.getElementById('arjs-video') ||
         [...document.querySelectorAll('video')].find((v) => v.srcObject && v.videoWidth);
+    }
+
+    function sceneElement() {
+      return host.querySelector('a-scene');
     }
 
     function sceneCanvas() {
       return host.querySelector('canvas.a-canvas');
     }
 
-    function originalTransform(element) {
-      if (!savedTransforms.has(element)) {
-        savedTransforms.set(element, {
-          transform: element.style.transform,
-          origin: element.style.transformOrigin,
-        });
+    function rectOf(element) {
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return {
+        x: Math.round(rect.left),
+        y: Math.round(rect.top),
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+      };
+    }
+
+    function viewport() {
+      // Match CSS fixed-position viewport coordinates (not device pixel ratio).
+      return { width: window.innerWidth, height: window.innerHeight };
+    }
+
+    function sourceSize() {
+      const video = videoElement();
+      const track = video?.srcObject?.getVideoTracks?.()[0];
+      const settings = track?.getSettings?.() || {};
+      if (video?.videoWidth > 0 && video.videoHeight > 0) {
+        return { width: video.videoWidth, height: video.videoHeight };
       }
-      const original = savedTransforms.get(element);
-      element.style.transform = original.transform;
-      element.style.transformOrigin = original.origin;
+      if (settings.width > 0 && settings.height > 0) {
+        return { width: settings.width, height: settings.height };
+      }
+      return null;
+    }
+
+    function resetFraming() {
+      document.body.classList.remove('ar-camera-aligned');
+      document.body.style.removeProperty('--ar-frame-width');
+      document.body.style.removeProperty('--ar-frame-height');
+      document.body.style.removeProperty('--ar-frame-x');
+      document.body.style.removeProperty('--ar-frame-y');
+      lastRendererSize = '';
+      lastViewportSize = '';
+      const scene = sceneElement();
+      if (scene?.renderer) {
+        // Restore the canvas dimensions expected by the previous full-screen mode.
+        scene.renderer.setSize(window.innerWidth, window.innerHeight, false);
+      }
     }
 
     function applyFraming() {
-      const video = videoElement();
-      const canvas = sceneCanvas();
-      if (!video || !canvas || !video.videoWidth || !video.videoHeight) return;
-
-      if (framingMode !== 'wide') {
-        // Do not modify AR.js' video/canvas styles in the default mode.
-        for (const element of [video, canvas]) {
-          if (savedTransforms.has(element)) originalTransform(element);
-        }
+      if (framingMode !== 'aligned') {
+        if (document.body.classList.contains('ar-camera-aligned')) resetFraming();
         return;
       }
-      originalTransform(video);
-      originalTransform(canvas);
 
-      const viewWidth = window.innerWidth;
-      const viewHeight = window.innerHeight;
-      const videoRect = video.getBoundingClientRect();
-      const canvasRect = canvas.getBoundingClientRect();
-      if (!videoRect.width || !videoRect.height || !canvasRect.width || !canvasRect.height) return;
+      const video = videoElement();
+      const scene = sceneElement();
+      const source = sourceSize();
+      if (!video || !scene || !source) return;
 
-      // AR.js normally uses a fullscreen *cover* presentation. An identical
-      // screen-space scale on BOTH layers reveals the source's cropped edges
-      // while preserving their relative alignment. Bars are intentional.
-      const scale = Math.min(1, viewWidth / videoRect.width, viewHeight / videoRect.height);
-      if (!Number.isFinite(scale) || scale <= 0) return;
-      const centerX = viewWidth / 2;
-      const centerY = viewHeight / 2;
-      for (const [element, rect] of [[video, videoRect], [canvas, canvasRect]]) {
-        const shiftX = (1 - scale) * (centerX - rect.left);
-        const shiftY = (1 - scale) * (centerY - rect.top);
-        element.style.transformOrigin = '0 0';
-        element.style.transform = `translate(${shiftX}px, ${shiftY}px) scale(${scale})`;
+      video.classList.add('jg-ar-feed');
+      const screen = viewport();
+      if (!(screen.width > 0 && screen.height > 0)) return;
+      const scale = Math.min(screen.width / source.width, screen.height / source.height);
+      const width = Math.round(source.width * scale);
+      const height = Math.round(source.height * scale);
+      const left = Math.round((screen.width - width) / 2);
+      const top = Math.round((screen.height - height) / 2);
+      const key = `${width}x${height}@${left},${top}`;
+
+      if (lastViewportSize !== key || !document.body.classList.contains('ar-camera-aligned')) {
+        document.body.style.setProperty('--ar-frame-width', `${width}px`);
+        document.body.style.setProperty('--ar-frame-height', `${height}px`);
+        document.body.style.setProperty('--ar-frame-x', `${left}px`);
+        document.body.style.setProperty('--ar-frame-y', `${top}px`);
+        document.body.classList.add('ar-camera-aligned');
+        lastViewportSize = key;
+      }
+
+      // CSS alone would stretch a 392x736 drawing buffer into a 392x294 box.
+      // Resize the renderer buffer, too, keeping model projection undistorted.
+      if (scene.renderer) {
+        const rendererSize = `${width}x${height}`;
+        const canvas = sceneCanvas();
+        const currentWidth = canvas?.width || 0;
+        const currentHeight = canvas?.height || 0;
+        const pixelRatio = scene.renderer.getPixelRatio?.() || 1;
+        if (rendererSize !== lastRendererSize ||
+            Math.abs(currentWidth - width * pixelRatio) > 3 ||
+            Math.abs(currentHeight - height * pixelRatio) > 3) {
+          scene.renderer.setSize(width, height, false);
+          lastRendererSize = rendererSize;
+        }
       }
     }
 
@@ -131,30 +187,29 @@
       const track = video?.srcObject?.getVideoTracks?.()[0];
       const settings = track?.getSettings?.() || {};
       const capabilities = track?.getCapabilities?.() || {};
-      const screen = { width: window.innerWidth, height: window.innerHeight };
-      const source = video && video.videoWidth ?
-        { width: video.videoWidth, height: video.videoHeight } : null;
-      const present = (element) => {
-        if (!element) return null;
-        const rect = element.getBoundingClientRect();
-        return {
-          x: Math.round(rect.left),
-          y: Math.round(rect.top),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-        };
-      };
-      const crop = source ?
-        Math.max(0, Math.round((1 - Math.min(1,
-          (screen.width / screen.height) / (source.width / source.height))) * 100)) : null;
+      const source = sourceSize();
+      const videoBox = rectOf(video);
+      const canvasBox = rectOf(canvas);
+      const difference = videoBox && canvasBox ? {
+        x: Math.abs(videoBox.x - canvasBox.x),
+        y: Math.abs(videoBox.y - canvasBox.y),
+        width: Math.abs(videoBox.width - canvasBox.width),
+        height: Math.abs(videoBox.height - canvasBox.height),
+      } : null;
+      const aligned = difference && Object.values(difference).every((v) => v <= 2);
       return {
-        release: '3.0-hfx-1',
+        release: '3.0-hfx-2',
         framing: framingMode,
-        viewport: screen,
+        modeExplanation: framingMode === 'aligned' ?
+          'Full source camera image; video and 3D renderer use the same 4:3 rectangle.' :
+          'Legacy AR.js fullscreen layout (may crop the camera image).',
+        viewport: viewport(),
         videoPixels: source,
-        videoBox: present(video),
-        canvasBox: present(canvas),
-        approximateHorizontalCoverCropPercent: crop,
+        videoBox,
+        canvasBox,
+        alignmentDifferencePx: difference,
+        layersAligned: aligned,
+        rendererBufferPixels: canvas ? { width: canvas.width, height: canvas.height } : null,
         track: {
           width: settings.width ?? null,
           height: settings.height ?? null,
@@ -166,7 +221,7 @@
             step: capabilities.zoom.step,
           } : null,
         },
-        note: cameraNote,
+        note: source ? 'Camera frame available' : 'Waiting for camera video',
       };
     }
 
@@ -174,42 +229,28 @@
       options.onCameraInfo?.(getCameraDiagnostics());
     }
 
-    async function requestOneX() {
-      const track = videoElement()?.srcObject?.getVideoTracks?.()[0];
-      const zoom = track?.getCapabilities?.()?.zoom;
-      if (!zoom || !track?.applyConstraints) {
-        cameraNote = 'This browser does not expose camera zoom controls.';
-        reportCamera();
-        return false;
-      }
-      const target = Math.max(zoom.min, Math.min(zoom.max, 1));
-      try {
-        await track.applyConstraints({ advanced: [{ zoom: target }] });
-        cameraNote = `Requested ${target}x camera zoom (if supported).`;
-      } catch (error) {
-        cameraNote = `Camera rejected zoom request: ${error.message}`;
-      }
-      reportCamera();
-      return true;
-    }
-
     function startDiagnostics() {
       if (diagnosticsTimer) return;
-      // AR.js can replace inline video styles as the stream starts/resizes.
-      // Re-apply the optional framing on a small interval, not per animation frame.
+      // The source starts asynchronously; keep the rect updated as its actual
+      // dimensions become available. Avoid mutating AR.js marker parameters.
       diagnosticsTimer = window.setInterval(() => {
         applyFraming();
         reportCamera();
       }, 1500);
-      window.addEventListener('resize', () => {
-        window.requestAnimationFrame(() => {
+      if (!listenersAdded) {
+        listenersAdded = true;
+        window.addEventListener('resize', () => {
+          window.requestAnimationFrame(() => { applyFraming(); reportCamera(); });
+        });
+        window.addEventListener('arjs-video-loaded', () => {
+          window.setTimeout(() => { applyFraming(); reportCamera(); }, 250);
+        });
+        sceneElement()?.addEventListener('renderstart', () => {
           applyFraming();
           reportCamera();
         });
-      });
-      window.addEventListener('arjs-video-loaded', () => {
-        window.setTimeout(() => { applyFraming(); reportCamera(); }, 200);
-      });
+      }
+      applyFraming();
       reportCamera();
     }
 
@@ -316,9 +357,10 @@
         'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.8/aframe/build/aframe-ar.js',
       ], () => Boolean(window.AFRAME?.components?.arjs || window.AFRAME?.systems?.arjs));
 
-      const portrait = window.innerHeight > window.innerWidth;
-      const width = portrait ? 480 : 640;
-      const height = portrait ? 640 : 480;
+      // Request a standard landscape frame for predictable intrinsics;
+      // actual source size is discovered from the returned video track.
+      const width = 640;
+      const height = 480;
       const pattern = options.hiro
         ? 'preset="hiro"'
         : `type="pattern" url="${options.markerUrl}"`;
@@ -367,12 +409,12 @@
       start,
       select,
       setFramingMode(mode) {
-        framingMode = mode === 'wide' ? 'wide' : 'normal';
+        framingMode = mode === 'legacy' ? 'legacy' : 'aligned';
+        if (framingMode === 'legacy') resetFraming();
         applyFraming();
         reportCamera();
       },
       getCameraDiagnostics,
-      requestOneX,
       updateSettings(settings) {
         currentSettings = settings;
         applySettings();

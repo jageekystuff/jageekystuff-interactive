@@ -31,8 +31,8 @@ These are **backlog items**, not verified diagnoses. Do not change working Andro
 
 ## CAM-01 — Mobile camera appears more zoomed than native 1× (V3)
 
-- Status: **under test** in `3.0-hfx-1`.
+- Status: **under test** in `3.0-hfx-2` (after v3.0-hfx-1 exposed mismatched video/canvas rectangles).
 - Android screen recordings vs native 1× photos suggest a narrower field of view. Root causes may include video `cover` cropping, video-track zoom or different device camera selection; not yet isolated.
-- Hotfix adds optional synchronized wide-video/WebGL view and camera diagnostics in **Ajustar 3D**. The default framing is preserved.
-- Test at 100 and 200 cm, verify marker alignment in both modes, and copy the diagnostic JSON.
+- v3.0-hfx-2 uses a common aspect-matched video/WebGL stage; legacy fullscreen is the fallback. Verify that diagnostics report `layersAligned: true` on Xiaomi and that the Pokémon stays attached to the printed marker.
+- Test at 100 and 200 cm, verify marker alignment in aligned mode, and copy the diagnostic JSON. Oversized Pokémon are a separate calibration issue.
 - Keep 3D physical-size calibration separate; the model sizes are still provisional.

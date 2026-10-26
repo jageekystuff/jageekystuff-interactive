@@ -824,3 +824,41 @@ body.ar-body .ar-start {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+/* V3.0-hfx-2 CAM-01: letterbox the *real* camera track and its renderer together.
+   Scope is V3 only; V2 retains its historical AR.js layout. */
+body.ar-body.unified-ar.ar-camera-aligned #scene-host > a-scene {
+  position: absolute !important;
+  inset: auto !important;
+  left: var(--ar-frame-x) !important;
+  top: var(--ar-frame-y) !important;
+  width: var(--ar-frame-width) !important;
+  height: var(--ar-frame-height) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+body.ar-body.unified-ar.ar-camera-aligned #scene-host canvas.a-canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+body.ar-body.unified-ar.ar-camera-aligned video.jg-ar-feed {
+  position: fixed !important;
+  inset: auto !important;
+  left: var(--ar-frame-x) !important;
+  top: var(--ar-frame-y) !important;
+  width: var(--ar-frame-width) !important;
+  height: var(--ar-frame-height) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  transform: none !important;
+  object-fit: fill !important; /* CSS rectangle shares the actual track aspect ratio. */
+}

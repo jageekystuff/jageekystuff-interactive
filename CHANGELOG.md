@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0-hfx-2] — 2026-10-26 — Match camera and WebGL display rectangles
+
+- Replaced the previous experimental wide CSS transform with a **matched-aspect, centered camera stage**, based on the camera track’s real video dimensions. Its WebGL viewport and video use the same rectangle instead of being scaled from different starting sizes.
+- Letterboxing on portrait screens is expected; the default aligned mode preserves the source image without cropping the sides.
+- Kept **Legacy view** as a reversible fallback if a device does not align the marker and 3D rendering correctly.
+- Improved diagnostics: reported stage dimensions, actual video/canvas rectangles, alignment difference, renderer buffer and real camera zoom where available. Removed the confusing **Request 1×** button; the previous log already reported 1×.
+- Left all four Pokémon models, their calibration JSON, V2 experience, printed QR and pattern files unchanged.
+- Requires real-device confirmation. **Does not yet solve 3D model scale** or all physical-camera/lens differences.
+
 ## [3.0-hfx-1] — 2026-10-26 — Camera framing diagnostics / optional wide view
 
 - Addressed CAM-01 with an **optional** wide framing test that applies the same screen-space scaling to the AR.js camera video and WebGL canvas, avoiding the obviously unsafe approach of resizing only the camera layer.
