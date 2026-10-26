@@ -61,6 +61,157 @@
     let cachedModel;
     let currentSettings;
     let markerVisible = false;
+    let framingMode = 'normal';
+    let cameraNote = 'Waiting for camera video';
+    let diagnosticsTimer;
+    const savedTransforms = new WeakMap();
+
+    // Keep camera/video and WebGL in the same screen-space transformation.
+    // Never change a single layer's CSS independently: it breaks AR alignment.
+    function videoElement() {
+      return document.getElementById('arjs-video') ||
+        [...document.querySelectorAll('video')].find((v) => v.srcObject && v.videoWidth);
+    }
+
+    function sceneCanvas() {
+      return host.querySelector('canvas.a-canvas');
+    }
+
+    function originalTransform(element) {
+      if (!savedTransforms.has(element)) {
+        savedTransforms.set(element, {
+          transform: element.style.transform,
+          origin: element.style.transformOrigin,
+        });
+      }
+      const original = savedTransforms.get(element);
+      element.style.transform = original.transform;
+      element.style.transformOrigin = original.origin;
+    }
+
+    function applyFraming() {
+      const video = videoElement();
+      const canvas = sceneCanvas();
+      if (!video || !canvas || !video.videoWidth || !video.videoHeight) return;
+
+      if (framingMode !== 'wide') {
+        // Do not modify AR.js' video/canvas styles in the default mode.
+        for (const element of [video, canvas]) {
+          if (savedTransforms.has(element)) originalTransform(element);
+        }
+        return;
+      }
+      originalTransform(video);
+      originalTransform(canvas);
+
+      const viewWidth = window.innerWidth;
+      const viewHeight = window.innerHeight;
+      const videoRect = video.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      if (!videoRect.width || !videoRect.height || !canvasRect.width || !canvasRect.height) return;
+
+      // AR.js normally uses a fullscreen *cover* presentation. An identical
+      // screen-space scale on BOTH layers reveals the source's cropped edges
+      // while preserving their relative alignment. Bars are intentional.
+      const scale = Math.min(1, viewWidth / videoRect.width, viewHeight / videoRect.height);
+      if (!Number.isFinite(scale) || scale <= 0) return;
+      const centerX = viewWidth / 2;
+      const centerY = viewHeight / 2;
+      for (const [element, rect] of [[video, videoRect], [canvas, canvasRect]]) {
+        const shiftX = (1 - scale) * (centerX - rect.left);
+        const shiftY = (1 - scale) * (centerY - rect.top);
+        element.style.transformOrigin = '0 0';
+        element.style.transform = `translate(${shiftX}px, ${shiftY}px) scale(${scale})`;
+      }
+    }
+
+    function getCameraDiagnostics() {
+      const video = videoElement();
+      const canvas = sceneCanvas();
+      const track = video?.srcObject?.getVideoTracks?.()[0];
+      const settings = track?.getSettings?.() || {};
+      const capabilities = track?.getCapabilities?.() || {};
+      const screen = { width: window.innerWidth, height: window.innerHeight };
+      const source = video && video.videoWidth ?
+        { width: video.videoWidth, height: video.videoHeight } : null;
+      const present = (element) => {
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return {
+          x: Math.round(rect.left),
+          y: Math.round(rect.top),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        };
+      };
+      const crop = source ?
+        Math.max(0, Math.round((1 - Math.min(1,
+          (screen.width / screen.height) / (source.width / source.height))) * 100)) : null;
+      return {
+        release: '3.0-hfx-1',
+        framing: framingMode,
+        viewport: screen,
+        videoPixels: source,
+        videoBox: present(video),
+        canvasBox: present(canvas),
+        approximateHorizontalCoverCropPercent: crop,
+        track: {
+          width: settings.width ?? null,
+          height: settings.height ?? null,
+          facingMode: settings.facingMode ?? null,
+          zoom: settings.zoom ?? null,
+          zoomCapabilities: capabilities.zoom ? {
+            min: capabilities.zoom.min,
+            max: capabilities.zoom.max,
+            step: capabilities.zoom.step,
+          } : null,
+        },
+        note: cameraNote,
+      };
+    }
+
+    function reportCamera() {
+      options.onCameraInfo?.(getCameraDiagnostics());
+    }
+
+    async function requestOneX() {
+      const track = videoElement()?.srcObject?.getVideoTracks?.()[0];
+      const zoom = track?.getCapabilities?.()?.zoom;
+      if (!zoom || !track?.applyConstraints) {
+        cameraNote = 'This browser does not expose camera zoom controls.';
+        reportCamera();
+        return false;
+      }
+      const target = Math.max(zoom.min, Math.min(zoom.max, 1));
+      try {
+        await track.applyConstraints({ advanced: [{ zoom: target }] });
+        cameraNote = `Requested ${target}x camera zoom (if supported).`;
+      } catch (error) {
+        cameraNote = `Camera rejected zoom request: ${error.message}`;
+      }
+      reportCamera();
+      return true;
+    }
+
+    function startDiagnostics() {
+      if (diagnosticsTimer) return;
+      // AR.js can replace inline video styles as the stream starts/resizes.
+      // Re-apply the optional framing on a small interval, not per animation frame.
+      diagnosticsTimer = window.setInterval(() => {
+        applyFraming();
+        reportCamera();
+      }, 1500);
+      window.addEventListener('resize', () => {
+        window.requestAnimationFrame(() => {
+          applyFraming();
+          reportCamera();
+        });
+      });
+      window.addEventListener('arjs-video-loaded', () => {
+        window.setTimeout(() => { applyFraming(); reportCamera(); }, 200);
+      });
+      reportCamera();
+    }
 
     function status(message) {
       onStatus?.(message);
@@ -199,6 +350,7 @@
       });
       sceneReady = true;
       loadModel();
+      startDiagnostics();
       status('Camera starting · aim at marker');
     }
 
@@ -214,6 +366,13 @@
     return {
       start,
       select,
+      setFramingMode(mode) {
+        framingMode = mode === 'wide' ? 'wide' : 'normal';
+        applyFraming();
+        reportCamera();
+      },
+      getCameraDiagnostics,
+      requestOneX,
       updateSettings(settings) {
         currentSettings = settings;
         applySettings();

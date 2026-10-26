@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current platform release: `v3.0` · Status: experimental / in active testing**
+**Current platform release: `v3.0-hfx-1` · Status: experimental / in active testing**
 
 A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
@@ -74,6 +74,17 @@ All four models are registered in `assets/config/model-calibrations.json`. V2 an
 V3 converts centimeters to marker units using the marker width as a reference. Its physical dimensions remain **approximate until verified on the actual printed card**. Saved slider adjustments are browser-local for testing and **are not automatically committed to GitHub**. To make a value permanent for everyone, copy the calibration JSON from the panel and incorporate the approved values into `assets/config/model-calibrations.json` in a later release. In V2 the preserved panel still shows its original marker units.
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
+
+## Camera framing: V3.0-hfx-1 (CAM-01)
+
+In V3, open **Ajustar 3D → CAM-01 · Camera framing test** after starting the camera. The camera controls are **developer-only** and are not part of the intended final visitor UI.
+
+- **Normal view**: original AR.js fullscreen behavior; the default remains unchanged.
+- **Wide view (test)**: scales camera and WebGL together to reveal more scene around the marker; can show blank bands. Check alignment before using this mode for photos.
+- **Request 1×**: attempts to request 1× only when the browser reports zoom control support. It cannot ensure the same lens or framing as the built-in camera app.
+- **Copy camera diagnostics**: includes reported source dimensions, viewport, rendering boxes, video track zoom settings and estimated horizontal crop. It does not include a photo or any camera frames.
+
+Wide view is an experimental workaround for AR.js' known sizing behavior; do not treat it as a confirmed universal fix until validated on the Xiaomi and iPhone. The four model calibrations remain unchanged pending this check.
 
 ## How to test V3 on a phone
 

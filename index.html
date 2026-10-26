@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#131a2c" />
     <meta name="description" content="Jageekystuff Interactive — mobile augmented reality cosplay experiences" />
     <title>Jageekystuff Interactive · Pokémon AR V3</title>
-    <link rel="stylesheet" href="/assets/styles.css?v=3.0" />
+    <link rel="stylesheet" href="/assets/styles.css?v=3.0-hfx-1" />
   </head>
   <body class="ar-body unified-ar">
     <main>
@@ -14,13 +14,13 @@
 
       <div class="ar-header">
         <span class="mini-brand">✦ Jageekystuff</span>
-        <span id="ar-status" class="ar-status" role="status">AR not started · V3</span>
+        <span id="ar-status" class="ar-status" role="status">AR not started · V3.0-hfx-1</span>
       </div>
 
       <section class="ar-bottom v3-controls" aria-label="Character selection">
         <div class="v3-panel-heading">
           <strong>Jageekystuff AR</strong>
-          <span class="v3-version">V3.0 · unified experience</span>
+          <span class="v3-version">V3.0-hfx-1 · unified experience</span>
         </div>
         <div class="v3-control-group">
           <span class="v3-label">Choose your trainer</span>
@@ -68,6 +68,18 @@
             <input type="range" data-adjust="z" min="-6" max="6" step="0.1" />
           </label>
         </div>
+        <section class="camera-test-tools" aria-label="Camera framing diagnostics">
+          <strong>CAM-01 · Camera framing test</strong>
+          <p class="adjust-note">Compare normal view with wide view. Wide view can add blank bands; check if Pokémon remains aligned with the QR.</p>
+          <div class="camera-test-buttons">
+            <button id="camera-normal" type="button" aria-pressed="true">Normal view</button>
+            <button id="camera-wide" type="button" aria-pressed="false">Wide view (test)</button>
+            <button id="camera-one-x" type="button">Request 1×</button>
+          </div>
+          <pre id="camera-diagnostics" class="camera-diagnostics">Camera information will appear after startup.</pre>
+          <button id="copy-camera-diagnostics" type="button">Copy camera diagnostics</button>
+          <p class="adjust-note" id="camera-feedback" aria-live="polite"></p>
+        </section>
         <div class="adjust-actions">
           <button id="reset-adjustments" type="button">Reset</button>
           <button id="copy-adjustments" type="button">Copy settings</button>
@@ -78,7 +90,7 @@
       <div class="ar-start" id="start">
         <div class="start-card">
           <div class="scan-icon">✦</div>
-          <div class="eyebrow">Interactive cosplay · V3.0</div>
+          <div class="eyebrow">Interactive cosplay · V3.0-hfx-1</div>
           <h1>Choose your trainer.<br />Meet your Pokémon.</h1>
           <p>One card, four Pokémon. Start the camera and point at the QR-marker printed on our cosplay card.</p>
           <button class="button" id="launch" type="button">Start AR camera</button>
@@ -89,8 +101,8 @@
       </div>
     </main>
     <div id="ar-ui-layer" class="ar-ui-layer" aria-label="AR controls"></div>
-    <script defer src="/core/config.js?v=3.0"></script>
-    <script defer src="/core/ar-engine.js?v=3.0"></script>
-    <script defer src="/experiences/pokemon/v3/app.js?v=3.0"></script>
+    <script defer src="/core/config.js?v=3.0-hfx-1"></script>
+    <script defer src="/core/ar-engine.js?v=3.0-hfx-1"></script>
+    <script defer src="/experiences/pokemon/v3/app.js?v=3.0-hfx-1"></script>
   </body>
 </html>

@@ -774,3 +774,53 @@ body.ar-body .ar-start {
     font-size: 10px !important;
   }
 }
+
+/* V3.0-hfx-1: developer-only camera diagnostics; no V2 styles are changed. */
+.unified-ar .camera-test-tools {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid #53607c;
+  border-radius: 12px;
+  background: #19243b;
+}
+
+.unified-ar .camera-test-tools > strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.unified-ar .camera-test-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0;
+}
+
+.unified-ar .camera-test-buttons button,
+.unified-ar #copy-camera-diagnostics {
+  border: 1px solid #8190ae;
+  border-radius: 9px;
+  background: #314261;
+  color: #fff;
+  padding: 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.unified-ar .camera-test-buttons button[aria-pressed='true'] {
+  background: #7466aa;
+  border-color: #dbceff;
+}
+
+.unified-ar .camera-diagnostics {
+  margin: 10px 0;
+  max-height: 170px;
+  overflow: auto;
+  padding: 9px;
+  background: #0c1321;
+  color: #d6f0ee;
+  border-radius: 8px;
+  font: 11px/1.45 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

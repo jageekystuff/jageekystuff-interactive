@@ -28,3 +28,11 @@ These are **backlog items**, not verified diagnoses. Do not change working Andro
 - Confirm trainer/model switching does not restart or freeze the camera.
 - Re-test iPhone Safari camera framing, sensor permissions, colors and model orientation.
 - No integrated photo capture yet; it remains deferred until tracking is reliable.
+
+## CAM-01 — Mobile camera appears more zoomed than native 1× (V3)
+
+- Status: **under test** in `3.0-hfx-1`.
+- Android screen recordings vs native 1× photos suggest a narrower field of view. Root causes may include video `cover` cropping, video-track zoom or different device camera selection; not yet isolated.
+- Hotfix adds optional synchronized wide-video/WebGL view and camera diagnostics in **Ajustar 3D**. The default framing is preserved.
+- Test at 100 and 200 cm, verify marker alignment in both modes, and copy the diagnostic JSON.
+- Keep 3D physical-size calibration separate; the model sizes are still provisional.

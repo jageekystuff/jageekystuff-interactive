@@ -14,6 +14,10 @@
   const adjustmentPanel = document.getElementById('ar-adjustments');
   const inputs = [...document.querySelectorAll('[data-adjust]')];
   const adjustmentsFeedback = document.getElementById('adjust-feedback');
+  const cameraDiagnostics = document.getElementById('camera-diagnostics');
+  const cameraFeedback = document.getElementById('camera-feedback');
+  const normalCameraButton = document.getElementById('camera-normal');
+  const wideCameraButton = document.getElementById('camera-wide');
   const params = new URLSearchParams(window.location.search);
   const useHiro = params.get('marker') === 'hiro';
 
@@ -76,6 +80,9 @@
       host: document.getElementById('scene-host'),
       onStatus: setStatus,
       onInfo: setInfo,
+      onCameraInfo: (details) => {
+        cameraDiagnostics.textContent = JSON.stringify(details, null, 2);
+      },
       hiro: useHiro,
       markerUrl: shared.referenceMarker.pattern,
       markerWidthCm: useHiro ? 19 : shared.referenceMarker.widthCm,
@@ -142,6 +149,33 @@
 
     renderButtons();
     showCurrentModel();
+
+    function changeFraming(mode) {
+      engine.setFramingMode(mode);
+      normalCameraButton.setAttribute('aria-pressed', String(mode === 'normal'));
+      wideCameraButton.setAttribute('aria-pressed', String(mode === 'wide'));
+      cameraFeedback.textContent = mode === 'wide' ?
+        'Experimental wide view enabled. Check that the Pokémon stays attached to the QR.' :
+        'Normal AR.js framing restored.';
+    }
+
+    normalCameraButton.addEventListener('click', () => changeFraming('normal'));
+    wideCameraButton.addEventListener('click', () => changeFraming('wide'));
+    document.getElementById('camera-one-x').addEventListener('click', async () => {
+      const applied = await engine.requestOneX();
+      cameraFeedback.textContent = applied ?
+        '1× requested; compare with the camera app. Check the zoom value below.' :
+        'Zoom controls are not exposed by this browser.';
+    });
+    document.getElementById('copy-camera-diagnostics').addEventListener('click', async () => {
+      const text = JSON.stringify(engine.getCameraDiagnostics(), null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+        cameraFeedback.textContent = 'Camera diagnostics copied.';
+      } catch {
+        cameraFeedback.textContent = 'Clipboard blocked. The values are visible above.';
+      }
+    });
 
     for (const input of inputs) {
       input.addEventListener('input', () => {

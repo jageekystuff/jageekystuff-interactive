@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0-hfx-1] — 2026-10-26 — Camera framing diagnostics / optional wide view
+
+- Addressed CAM-01 with an **optional** wide framing test that applies the same screen-space scaling to the AR.js camera video and WebGL canvas, avoiding the obviously unsafe approach of resizing only the camera layer.
+- Preserved the existing full-screen framing as **Normal view**; wide view is experimental and must be checked on a real phone for overlay alignment. Blank bands can be expected in wide view.
+- Added developer-only camera diagnostics in **Ajustar 3D**: actual video pixels, viewport, displayed video/canvas boxes, browser-reported zoom when available, and an approximate aspect-ratio crop estimate.
+- Added a user-triggered **Request 1×** control only where the browser exposes a zoom capability; this does not force a lens selection or guarantee native-camera equivalence.
+- Kept V2, all markers, four GLBs and calibration JSON **unchanged**. This release does not fix oversized 3D models (tracked separately).
+- **Phone validation still required**; these changes are diagnostic and reversible, not a verified universal camera fix.
+
 ## [3.0] — 2026-10-26 — Unified experience and configurable AR Core
 
 - Reorganized the application into a shared `core/`, a versioned Pokémon experience, and shared model/marker assets.
