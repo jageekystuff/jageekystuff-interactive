@@ -1,146 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width,initial-scale=1" name="viewport"/>
-    <meta content="#111527" name="theme-color"/>
-    <meta content="Jageekystuff Interactive Experiences — fan-made interactive cosplay experiments and augmented reality." name="description"/>
-    <title>
-      Jageekystuff — Interactive Experiences
-    </title>
-    <link href="/assets/styles.css" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#131a2c" />
+    <meta name="description" content="Jageekystuff Interactive — mobile augmented reality cosplay experiences" />
+    <title>Jageekystuff Interactive · Pokémon AR V3</title>
+    <link rel="stylesheet" href="/assets/styles.css?v=3.0" />
   </head>
-  <body>
-    <div class="container">
-      <nav class="nav">
-        <a class="mark" href="/">
-          <span class="mark-icon">
-            ✦
-          </span>
-          Jageekystuff
-          <span style="color:#b4b5d7">
-            Interactive
-          </span>
-        </a>
-        <small>
-          Fan-made experiments · Cosplay &amp; AR
-        </small>
-      </nav>
-      <main>
-        <section class="hero">
-          <div class="eyebrow">
-            Interactive cosplay experiences
-          </div>
-          <h1>
-            Step into our
-            <span class="gradient">
-              geeky universe.
-            </span>
-          </h1>
-          <p>
-            Meet our characters, scan our cosplay cards, and explore augmented reality. Created for fun, by fans.
-          </p>
-        </section>
-        <section aria-label="Experiences" class="grid">
-          <article class="feature-card fire">
-            <div class="tag">
-              Fire-type trainer · AR demo
-            </div>
-            <h2>
-              Blaine
-            </h2>
-            <p>
-              Meet Magmar and Arcanine in augmented reality. Both models were calibrated with the HIRO test marker. Our custom card QR-marker is being tested.
-            </p>
-            <div class="pills">
-              <span>
-                Magmar
-              </span>
-              <span>
-                Arcanine
-              </span>
-            </div>
-            <a class="button" href="/pokemon/blaine/">
-              Enter Blaine experience →
-            </a>
-          </article>
-          <article class="feature-card electric">
-            <div class="tag">
-              Electric-type trainer · AR demo
-            </div>
-            <h2>
-              Lt. Surge
-            </h2>
-            <p>
-              Summon Raichu or Electrode in augmented reality. Both models were calibrated with the HIRO test marker. Our custom card QR-marker is being tested.
-            </p>
-            <div class="pills">
-              <span>
-                Raichu
-              </span>
-              <span>
-                Electrode
-              </span>
-            </div>
-            <a class="button" href="/pokemon/surge/">
-              Enter Surge experience →
-            </a>
-          </article>
-        </section>
-        <div class="notice">
-          <h3>
-            🧪 Prototype <span id="release-version">v2.12-hfx-1</span>
-          </h3>
-          <p>
-            We're testing custom QR-markers for Blaine and Lt. Surge. Scan the QR on
-            a trainer card to open its experience, then point your camera at the
-            same printed QR-marker to summon a Pokémon.
-          </p>
-          <p>
-            Four Pokémon are currently available: Magmar and Arcanine for Blaine;
-            Raichu and Electrode for Lt. Surge. Custom QR-marker tracking still
-            needs to be validated on real phones. The
-            <a
-              href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png"
-              rel="noopener noreferrer"
-              target="_blank"
-            >HIRO test marker</a>
-            remains available as a fallback inside each AR experience.
-          </p>
-        </div>
-        <p style="margin-top:26px;text-align:center">
-          <a href="/credits/">
-            Model credits &amp; acknowledgements
-          </a>
-        </p>
-      </main>
-    </div>
-    <footer class="footer">
-      <div class="container">
-        <span>
-          Jageekystuff Interactive Experiences
-        </span>
-        <span>
-          Unofficial fan-made cosplay project. Not affiliated with The Pokémon Company or Nintendo.
-        </span>
+  <body class="ar-body unified-ar">
+    <main>
+      <div id="scene-host" class="ar-scene" aria-label="Augmented reality camera"></div>
+
+      <div class="ar-header">
+        <span class="mini-brand">✦ Jageekystuff</span>
+        <span id="ar-status" class="ar-status" role="status">AR not started · V3</span>
       </div>
-    </footer>
-    <script>
-      // Keep the homepage release label synchronized with the VERSION file.
-      fetch('/VERSION', { cache: 'no-store' })
-        .then((response) => {
-          if (!response.ok) throw new Error('VERSION unavailable');
-          return response.text();
-        })
-        .then((version) => {
-          const label = document.getElementById('release-version');
-          if (label && version.trim()) {
-            label.textContent = `v${version.trim()}`;
-          }
-        })
-        .catch(() => {
-          // Keep the hard-coded fallback label for local or offline previews.
-        });
-    </script>
+
+      <section class="ar-bottom v3-controls" aria-label="Character selection">
+        <div class="v3-panel-heading">
+          <strong>Jageekystuff AR</strong>
+          <span class="v3-version">V3.0 · unified experience</span>
+        </div>
+        <div class="v3-control-group">
+          <span class="v3-label">Choose your trainer</span>
+          <div class="choice" id="trainer-options" role="group" aria-label="Trainer"></div>
+        </div>
+        <div class="v3-control-group">
+          <span class="v3-label">Choose your Pokémon</span>
+          <div class="choice" id="model-options" role="group" aria-label="Pokémon"></div>
+        </div>
+        <p class="v3-current" id="current-selection">Loading selection…</p>
+        <p class="v3-help">Point at the <a class="guide-link" href="/assets/markers/unified-qr-marker-19cm.svg" target="_blank" rel="noopener noreferrer">same QR-marker</a> printed on the cosplay card. <a class="guide-link" href="/?marker=hiro">HIRO fallback</a> · <a class="guide-link" href="/credits/">Credits</a></p>
+      </section>
+
+      <button id="open-adjustments" class="adjust-toggle" type="button"
+        aria-controls="ar-adjustments" aria-expanded="false">⚙ Ajustar 3D</button>
+
+      <div id="ar-adjustments" class="adjust-panel hidden" role="region"
+        aria-label="Calibration controls">
+        <div class="adjust-head">
+          <strong>V3 physical-card calibration (test)</strong>
+          <button id="close-adjustments" type="button" aria-label="Close calibration">✕</button>
+        </div>
+        <p class="adjust-note" id="model-info">Model loading information</p>
+        <p class="adjust-note">Target height is in centimeters. X, Y, Z use marker widths; verify size on the printed 19 cm marker.</p>
+        <div class="adjust-grid">
+          <label>Target height (cm) <output data-out="heightCm">70</output>
+            <input type="range" data-adjust="heightCm" min="20" max="200" step="5" />
+          </label>
+          <label>Turn left/right <output data-out="yaw">0</output>°
+            <input type="range" data-adjust="yaw" min="-180" max="180" step="5" />
+          </label>
+          <label>Tilt forward/back <output data-out="pitch">0</output>°
+            <input type="range" data-adjust="pitch" min="-180" max="180" step="5" />
+          </label>
+          <label>Side tilt <output data-out="roll">0</output>°
+            <input type="range" data-adjust="roll" min="-180" max="180" step="5" />
+          </label>
+          <label>Left/right position <output data-out="x">0</output>
+            <input type="range" data-adjust="x" min="-8" max="8" step="0.1" />
+          </label>
+          <label>Up/down position <output data-out="y">0</output>
+            <input type="range" data-adjust="y" min="-6" max="6" step="0.1" />
+          </label>
+          <label>Depth <output data-out="z">0</output>
+            <input type="range" data-adjust="z" min="-6" max="6" step="0.1" />
+          </label>
+        </div>
+        <div class="adjust-actions">
+          <button id="reset-adjustments" type="button">Reset</button>
+          <button id="copy-adjustments" type="button">Copy settings</button>
+        </div>
+        <p id="adjust-feedback" class="adjust-note" aria-live="polite"></p>
+      </div>
+
+      <div class="ar-start" id="start">
+        <div class="start-card">
+          <div class="scan-icon">✦</div>
+          <div class="eyebrow">Interactive cosplay · V3.0</div>
+          <h1>Choose your trainer.<br />Meet your Pokémon.</h1>
+          <p>One card, four Pokémon. Start the camera and point at the QR-marker printed on our cosplay card.</p>
+          <button class="button" id="launch" type="button">Start AR camera</button>
+          <p class="small-note" id="boot-status" role="status" aria-live="polite"></p>
+          <p class="small-note">Camera permission required · HTTPS · Experimental physical-size calibration.</p>
+          <p class="small-note"><a href="/pokemon/v2/">Open V2 classic experiences</a> · <a href="/credits/">Credits</a></p>
+        </div>
+      </div>
+    </main>
+    <div id="ar-ui-layer" class="ar-ui-layer" aria-label="AR controls"></div>
+    <script defer src="/core/config.js?v=3.0"></script>
+    <script defer src="/core/ar-engine.js?v=3.0"></script>
+    <script defer src="/experiences/pokemon/v3/app.js?v=3.0"></script>
   </body>
 </html>

@@ -713,3 +713,64 @@ body.ar-body .ar-start {
     font-size: 11px;
   }
 }
+
+/* V3: unified trainer and character selector. V2 keeps the existing styles. */
+.unified-ar .v3-controls {
+  width: min(calc(100% - 22px), 510px);
+  padding: 14px;
+}
+
+.v3-panel-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.v3-version {
+  font-size: 10px;
+  color: #b9c4df;
+}
+
+.v3-control-group {
+  margin-top: 8px;
+}
+
+.v3-label {
+  font-size: 11px;
+  color: #d9e1f3;
+  font-weight: 700;
+}
+
+.unified-ar .choice {
+  margin-top: 4px;
+}
+
+.unified-ar .choice button {
+  min-height: 42px;
+  padding: 8px 10px;
+}
+
+.v3-current {
+  color: #f9df9d !important;
+  font-weight: 750;
+}
+
+.v3-help {
+  font-size: 11px !important;
+}
+
+@media (max-width: 410px) {
+  .unified-ar .ar-bottom {
+    padding: 10px;
+  }
+
+  .unified-ar .choice button {
+    font-size: 13px;
+  }
+
+  .v3-help {
+    font-size: 10px !important;
+  }
+}

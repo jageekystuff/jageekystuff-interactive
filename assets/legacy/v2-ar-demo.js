@@ -2,8 +2,10 @@
    Uploaded GLB files stay unchanged; dimensions are normalized at runtime.
    Version 2.12 tests a per-trainer QR pattern marker.
    Use ?marker=hiro to switch back to the validated HIRO setup. */
-(function () {
+(async function () {
     'use strict';
+    // V2 is intentionally kept operational for QR links already printed.
+    const sharedConfig = await window.JageekystuffConfig.load();
     const start = document.getElementById('start');
     const launch = document.getElementById('launch');
     const sceneHost = document.getElementById('scene-host');
@@ -53,6 +55,15 @@
             setting.height = Math.max(3.5, setting.height);
             setting.x = setting.x < 0 ? -2.0 : 2.0;
         }
+    }
+    // Shared source of truth: V2 and V3 consult the same calibration file.
+    // Profiles are deliberately independent to avoid invalidating V2 camera tests.
+    for (const name of Object.keys(defaults)) {
+        const entry = sharedConfig?.models?.[name];
+        if (!entry) continue;
+        if (entry.file) models[name] = entry.file;
+        const profile = entry.profiles?.[useHiro ? 'v2-hiro' : 'v2-card'];
+        if (profile) defaults[name] = { ...defaults[name], ...profile };
     }
     const modelLabels = {
         magmar: 'Magmar',
@@ -312,7 +323,7 @@
             const video = document.getElementById('arjs-video');
             const canvas = document.querySelector('#scene-host canvas');
             diagnostics.textContent = [
-                'v2.12 QR marker debug',
+                'V2 compatibility marker debug',
                 'viewport ' + window.innerWidth + 'x' + window.innerHeight,
                 'screen ' + window.screen.width + 'x' + window.screen.height,
                 'body ' + Math.round(document.body.getBoundingClientRect().width),

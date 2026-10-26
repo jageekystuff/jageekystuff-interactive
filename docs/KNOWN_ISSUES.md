@@ -20,3 +20,11 @@ These are **backlog items**, not verified diagnoses. Do not change working Andro
 - Create and validate combined QR/AR markers at physical cosplay-card size.
 - Test camera and marker layout on iOS/Safari, then prepare usable public photo flow.
 - Add Italian (default), English and Spanish after the core AR interaction is reliable.
+
+## V3.0 validation tasks
+
+- Confirm unified QR printed at 19 x 19 cm remains detectable at 100–200 cm against a light matte background.
+- Verify post-rotation model centering, physical dimensions, depth and offsets on the actual 80 x 120 cm card.
+- Confirm trainer/model switching does not restart or freeze the camera.
+- Re-test iPhone Safari camera framing, sensor permissions, colors and model orientation.
+- No integrated photo capture yet; it remains deferred until tracking is reliable.

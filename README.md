@@ -1,120 +1,107 @@
 # Jageekystuff Interactive Experiences
 
-**Current version:** `2.12-hfx-1` · **Status:** experimental / work in progress
+**Current platform release: `v3.0` · Status: experimental / in active testing**
 
-Interactive, fan-made cosplay experiences created by **Johán Hernandez Molina and Aldo Palmieri (Jageekystuff)**. The site lets convention visitors open a mobile browser experience, point their camera at a physical marker and see a virtual Pokémon alongside a trainer cosplay.
+A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
-This is an **unofficial, non-commercial fan project** and is not affiliated with or endorsed by Pokémon, Nintendo, Game Freak, Creatures, or The Pokémon Company.
+The new `v3.0` release introduces a **reusable AR Core** and a configurable experience layer. The platform is no longer architecturally tied to one particular experience, but **only the current Pokémon cosplay experience is implemented**. No additional experiences are included or implied by the repository structure.
 
-## Live experiences
+This is an unofficial, non-commercial fan project, not affiliated with or endorsed by any franchise owners. See [creator and asset credits](/credits/) or the [public credits page](https://jageekystuff-interactive.pages.dev/credits/).
 
-| Experience | Link | 3D models | Status |
-| --- | --- | --- | --- |
-| Blaine | [Open Blaine AR](https://jageekystuff-interactive.pages.dev/pokemon/blaine/) | Magmar, Arcanine | Approved and calibrated on Android with HIRO |
-| Lt. Surge | [Open Lt. Surge AR](https://jageekystuff-interactive.pages.dev/pokemon/surge/) | Raichu, Electrode | Approved and calibrated on Android with HIRO |
+## Live URLs and migration from V2
 
-**Model selection:** Only the four accepted `.glb` files remain in the current site: Magmar, Arcanine, Raichu and Electrode. Electabuzz/Rapidash experiments were withdrawn in `v2.11-hfx-1`; they remain in Git history. The current QR-marker experiment (`v2.12`) has not yet been validated on physical cards.
+| URL | Meaning | Printed QR compatibility |
+| --- | --- | --- |
+| [`/`](https://jageekystuff-interactive.pages.dev/) | **V3 unified AR** — choose trainer and Pokémon in the same camera scene | **New unified QR**, linked to this exact URL |
+| [`/pokemon/v3/`](https://jageekystuff-interactive.pages.dev/pokemon/v3/) | V3 alias, redirects to `/` | No new QR required |
+| [`/pokemon/v2/`](https://jageekystuff-interactive.pages.dev/pokemon/v2/) | V2 classic experience selection | Manual access |
+| [`/pokemon/v2/blaine/`](https://jageekystuff-interactive.pages.dev/pokemon/v2/blaine/) | Original Blaine AR and calibrations | Old Blaine marker still works |
+| [`/pokemon/v2/surge/`](https://jageekystuff-interactive.pages.dev/pokemon/v2/surge/) | Original Lt. Surge AR and calibrations | Old Surge marker still works |
+| `/pokemon/blaine/` | Legacy link, redirects to V2 Blaine | Old Blaine QR still opens |
+| `/pokemon/surge/` | Legacy link, redirects to V2 Surge | Old Surge QR still opens |
 
-**Project website:** https://jageekystuff-interactive.pages.dev/  
-**Creator and 3D asset credits:** https://jageekystuff-interactive.pages.dev/credits/
+**Important:** The QR printed for the unified card contains precisely:
 
-## How it works
+`https://jageekystuff-interactive.pages.dev/`
 
-1. The visitor scans the trainer card's **AR QR code**, which opens the trainer's page in a browser.
-2. They grant camera access and point at the **custom QR-marker** on the trainer card (experimental). For verified Android tracking, use the **HIRO fallback** (`?marker=hiro`).
-3. AR.js tracks the marker; A-Frame renders a Pokémon `.glb` model at an offset from it.
-4. The visitor can select the Pokémon and, during development, adjust its scale, orientation and position.
+Its **19 × 19 cm** combined QR/AR artwork and **15 × 15 cm** internal QR are in `assets/markers/unified-qr-marker-19cm.svg`. The accompanying `assets/markers/unified.patt` is trained on exactly that artwork. The *URL* launches V3; the *.patt pattern* recognizes the printed artwork once the camera starts. There is no second AR destination URL.
 
-**Calibrated Raichu, Electrode and Arcanine HIRO preset:** `height: 1.05, yaw: 0, pitch: -85, roll: 0, x: 0.3, y: 0, z: 0.5`.
+Older QR codes still encode the original trainer URLs. Their small compatibility redirect pages preserve the query string and route visitors to the corresponding V2 page. Changing a link target through a redirect does **not** change its AR image recognition pattern; the existing V2 patterns are preserved independently.
 
-**Current limitation:** Custom QR-marker artwork and `.patt` files are included as experimental assets. Recognition with physical cards and real-world shooting distances has **not** yet been validated. Do not print or glue permanent QR markers before testing.
+## Why V3 is a major release
 
-For the test marker, see [HIRO](https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png). Show or print it separately while testing with a phone.
+**V2** offered two trainer-specific pages, separate AR markers and application logic tied to each trainer. The approved Android tests and four GLBs are preserved in `/pokemon/v2/`.
 
-## Technology and hosting
+**V3** was introduced because the physical cosplay may use **one shared card** instead of two, and because we needed a configurable platform foundation instead of duplicating AR code for each experience. It has one visitor entrypoint, a shared camera, a trainer selector and contextual model selector. AR initialization, model loading and calibration handling are separated from experience-specific labels and choices. It keeps V2 available for comparison and backward compatibility.
 
-- Plain HTML, CSS and JavaScript, with [A-Frame](https://aframe.io/) and [AR.js](https://ar-js-org.github.io/AR.js-Docs/).
-- Static hosting on **Cloudflare Pages**, connected to this GitHub repository.
-- Models in glTF binary `.glb` format under `assets/models/`.
-- Designed for modern mobile browsers with HTTPS and camera permission; Android Chrome has been used for on-device tests. Browser and device behavior can vary. **iOS visual and model-orientation discrepancies remain open for investigation** (see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md)).
+This redesign is a deliberate platform milestone and uses the project-specific `3.0` major label. Version numbers are discrete components, not decimals (`2.9 → 2.10 → 2.11`; hotfixes like `2.12-hfx-1`).
 
-### Repository structure
+## Repository architecture
 
 ```text
-index.html                     Homepage
-pokemon/blaine/index.html      Blaine AR experience
-pokemon/surge/index.html       Lt. Surge AR experience
-assets/styles.css              Shared styling and mobile layout
-assets/ar-demo.js              AR experience and model configuration
-assets/models/*.glb            3D models
-credits/index.html             Creator and asset attributions
-README.md                      Project overview and instructions
-CHANGELOG.md                   Version history
-docs/KNOWN_ISSUES.md           Deferred compatibility bugs
-VERSION                        Current project version
+index.html                                    V3 unified experience at /
+pokemon/v3/index.html                        V3 alias, redirects to /
+pokemon/v2/index.html                        V2 classic experience directory
+pokemon/v2/blaine/index.html                 Original separate Blaine experience
+pokemon/v2/surge/index.html                  Original separate Lt. Surge experience
+pokemon/blaine/index.html                    Redirect for an old printed QR
+pokemon/surge/index.html                     Redirect for an old printed QR
+core/config.js                               Shared JSON configuration loader
+core/ar-engine.js                            Marker tracking, camera, model loading, physical fit
+experiences/pokemon/v3/experience.json       Trainer/model choices; no AR engine code
+experiences/pokemon/v3/app.js                V3-specific UI and selection
+assets/config/model-calibrations.json        Single committed source for model profiles
+assets/legacy/v2-ar-demo.js                  Preserved V2 engine, reads shared model config
+assets/models/*.glb                          Four approved, shared GLB models
+assets/markers/unified.patt                  V3 QR-marker recognition template
+assets/markers/unified-qr-marker-19cm.svg    Final-sized QR artwork for the unified card
+assets/markers/{blaine,surge}.patt           Legacy V2 pattern files
+assets/styles.css                            Shared mobile CSS
+credits/index.html                           Creators and CC BY attributions
+README.md, CHANGELOG.md, VERSION             Release documentation
 ```
 
-## Code formatting
+We intentionally do not add a new project, generic plugin manager, back-end, database or framework in this release. The AR Core is configurable and can be reused by adding an independent experience definition in a future release **if needed**.
 
-Source files are written in **readable, multiline form** and follow the project's
-`.prettierrc.json` and `.editorconfig` configuration. Use **Prettier** in VS Code
-(`Format Document`) for HTML, CSS, and JavaScript. Keep 2-space indentation,
-UTF-8 encoding, and LF line endings. Do not commit minified HTML/CSS/JS as
-application source. Formatted source files are served directly by Cloudflare Pages;
-no extra build step is required. The `.glb` models are binary and must not be formatted.
+## Shared calibration profiles
 
-## Contributing an update / deployment
+All four models are registered in `assets/config/model-calibrations.json`. V2 and V3 **read this same file**, but select distinct profiles to avoid mixing the old marker-coordinate measurements with new physical-card calibrations:
 
-1. Modify the files in the repository, keeping the same folder structure.
-2. Test on a real phone before calling a change stable. For AR, check camera access, marker detection, model orientation, and the mobile UI.
-3. Commit to the production branch `main`. Cloudflare Pages then deploys the new version automatically.
-4. For this static site, Cloudflare Pages uses: **Framework: None**, **Build command: `exit 0`**, **Output directory: `.`**, **Root directory: repository root**.
-5. When making a project release, update `VERSION`, `README.md` where necessary, and `CHANGELOG.md` in the **same commit**.
+- `v2-hiro`: originally approved values for the HIRO test marker.
+- `v2-card`: values from original trainer QR-marker experiments, retained for compatibility.
+- `v3-unified-card`: provisional height targets in **centimeters**, normalized **after rotation** to account for model depth and orientation, with an independent position relative to the unified 19 cm marker.
 
-### Versioning convention
+V3 converts centimeters to marker units using the marker width as a reference. Its physical dimensions remain **approximate until verified on the actual printed card**. Saved slider adjustments are browser-local for testing and **are not automatically committed to GitHub**. To make a value permanent for everyone, copy the calibration JSON from the panel and incorporate the approved values into `assets/config/model-calibrations.json` in a later release. In V2 the preserved panel still shows its original marker units.
 
-The project currently uses **MAJOR.MINOR release labels**. Each delivered project revision increments the **MINOR integer by one**, even if it is a documentation or maintenance release: `2.5 → 2.6 → 2.7 → 2.8 → 2.9 → 2.10 → 2.11`. Version components are integers, **not decimal fractions**. The next release after `2.9` is `2.10`, **not** `3.0`.
+Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
 
-A new **MAJOR** such as `3.0` is reserved for a deliberate major project milestone and/or an incompatible change requiring users or maintainers to migrate (for example, invalidating previously printed AR markers/QR links or replacing essential interaction flows without compatibility). New Pokémon, translations, UI fixes and documentation updates normally stay within the current major line.
+## How to test V3 on a phone
 
-This is a **simplified project convention inspired by [Semantic Versioning](https://semver.org/)**, not full SemVer: the formal SemVer scheme has three integer components `MAJOR.MINOR.PATCH` (e.g. `2.6.0`, `2.6.1`) and uses `PATCH` for backward-compatible bug fixes. We can adopt full SemVer later without confusing `2.10` with `2.1`. A Git commit does not automatically create a release; a release may contain several commits.
+1. Open `https://jageekystuff-interactive.pages.dev/` by scanning the **new unified QR**; using the same phone is sufficient.
+2. Tap **Start AR camera**, grant permission and aim at that **same printed QR-marker** on a matte, light-colored background.
+3. Choose Blaine or Lt. Surge and then a model; the camera should remain open when you switch.
+4. Use **Ajustar 3D** only for calibration testing. `Reset` reverts to the committed profile; `Copy settings` exports values to send for review.
+5. For diagnostics use `/?marker=hiro` with the HIRO test marker. Note that V3 physical-scale coordinates are still provisional, even with HIRO.
+6. If the unified marker loses tracking, test at 50, 100, 150 and 200 cm and compare contrast and lighting.
 
-Update `VERSION` and [CHANGELOG.md](CHANGELOG.md) for each newly delivered release. Never reuse a published release label for different contents.
+The camera, models and pattern recognition cannot be fully validated until this build is deployed and tested on actual Android and iOS devices. The earlier V2 physical-marker and iPhone limitations remain listed in `docs/KNOWN_ISSUES.md`.
 
-## Hotfix labels and clean deployments
+## Styling, hosting and releases
 
-After a published minor release, small follow-up fixes use a suffix, for
-example `v2.12-hfx-1`, `v2.12-hfx-2`, without advancing to `v2.13`.
-The next regular release after `v2.12` is `v2.13`. This is a custom naming
-convention rather than strict SemVer.
+- HTML, CSS and readable JavaScript; no frontend build system required.
+- [A-Frame](https://aframe.io/) + [AR.js](https://ar-js-org.github.io/AR.js-Docs/), hosted by **Cloudflare Pages** from GitHub `main`.
+- Cloudflare configuration: **Framework: None**, **Build command: `exit 0`**, **Output directory: `.`** and repository root as root directory.
+- Prettier configuration in `.prettierrc.json`; `.editorconfig` for 2-space indent. Neither overrides your work projects.
+- Update `VERSION`, `README.md` (when relevant) and `CHANGELOG.md` per release. Minor labels use increasing integers; `3.9` goes to `3.10`, never `4.0` just because of the numbering.
+- Hotfix naming is `v3.0-hfx-1` for follow-up fixes to V3.0 without changing the next regular version.
 
-This release is a **complete site snapshot**. Its four model files are:
-`magmar.glb`, `arcanine.glb`, `raichu.glb`, `electrode.glb`.
-The experimental Electabuzz/Rapidash models were removed in `v2.11-hfx-1`
-and remain recoverable through Git history.
+## Deferred features — not in V3.0
 
-Keep the repository's `.git/` directory when refreshing the project locally.
-Replacing the working files but preserving `.git/` lets Git detect deletions.
+- iOS/Safari rendering and tracking compatibility, final stable placement at photo distance.
+- Built-in AR snapshot, Save/Share flow only **after** the camera and calibration are reliable.
+- Language selection (Italian default, English, Spanish).
+- Randomized model selection, optional future social-share integrations and animations.
 
-## Planned (not yet implemented)
+## Models and credit notes
 
-- Validate the included custom QR-marker targets on actual phones and physical cosplay cards before replacing the HIRO fallback.
-- Test the final-sized printed markers and Pokémon placement beside the cosplayers.
-- Review mobile iOS/Safari appearance and marker orientation issues; see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
-- Add photo capture and language selection (Italian default, English and Spanish) after the core interaction is stable.
-- Consider better models for Electabuzz or Rapidash only if available without compromising stability; neither is currently offered.
-- Consider subtle animations and effects as a later enhancement, not part of this hotfix.
-
-## Credits, assets and intellectual property
-
-**Project concept, cosplay design and physical production:** Johán Hernandez Molina & Aldo Palmieri — Jageekystuff.
-
-**Interactive website, integration, mobile testing and AR calibration:** Jageekystuff, with technical direction led by Johán Hernandez Molina. The development workflow includes AI-assisted code generation and iterative human-led device testing.
-
-The website lists current model-specific attributions on [Credits & Acknowledgements](https://jageekystuff-interactive.pages.dev/credits/), including **Electrode** by `nguyenlouis32` and **Arcanine** by `Chechorams16` under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Historical attribution for withdrawn Electabuzz/Rapidash assets is retained in the Git history and [CHANGELOG.md](CHANGELOG.md).
-
-**Attribution for Magmar and Raichu still needs to be completed** once original asset links and licenses are confirmed. A model maker's license does not imply rights to the underlying Pokémon character. This repository does not provide a blanket license for its source code or third-party models.
-
-## Custom QR-marker testing (v2.12 and v2.12-hfx-1)
-
-The planned physical card QR and AR pattern marker are combined in one 19 cm marker containing a 15 cm QR. See [`docs/QR_AR_MARKER_V2.12.md`](docs/QR_AR_MARKER_V2.12.md) for exact positions, downloads and the HIRO fallback. This remains **experimental until verified on phones**.
+Models selected: Magmar, Arcanine, Raichu, Electrode. The Electabuzz/Rapidash candidates were rejected and removed in V2 hotfix history. Individual creator licenses for Electrode and Arcanine are described in `credits/index.html`. Original source/licensing metadata for Magmar and Raichu still needs verification; do not imply rights-owner endorsement.

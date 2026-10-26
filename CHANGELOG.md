@@ -1,4 +1,18 @@
-# Changelog — Jageekystuff Interactive Experiences
+# Changelog
+
+## [3.0] — 2026-10-26 — Unified experience and configurable AR Core
+
+- Reorganized the application into a shared `core/`, a versioned Pokémon experience, and shared model/marker assets.
+- Main URL `/` now opens V3: trainer selection and contextual Pokémon selection within one AR scene, without restarting the camera.
+- Preserved V2 under `/pokemon/v2/` and legacy trainer URLs as compatibility redirects; older printed QR codes remain navigable.
+- Connected V2 and V3 to `assets/config/model-calibrations.json`, using independent profiles to preserve verified V2 settings.
+- Added the unified 19 × 19 cm QR-marker artwork and matching `unified.patt`, pointing to the unchanged root URL.
+- Added a preliminary V3 oriented-bounding-box calibration flow with centimetre-based presentation targets; requires real-phone validation.
+- Updated README and architecture documentation. No additional experiences, photo capture or language switching are included in this release.
+
+---
+
+ — Jageekystuff Interactive Experiences
 
 Project release history, newest first. Each newly delivered revision increments the **minor version component by one** (`2.8 → 2.9 → 2.10`), not as a decimal fraction; a major release is a separate, intentional decision. These are project release labels rather than one version per Git commit.
 

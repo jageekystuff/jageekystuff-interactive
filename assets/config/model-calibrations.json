@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "unit": "centimeters for targetHeightCm/heightCm; AR marker units for x/y/z",
+  "referenceMarker": {
+    "name": "unified-card",
+    "widthCm": 19,
+    "patternRatio": 0.79,
+    "pattern": "/assets/markers/unified.patt"
+  },
+  "models": {
+    "magmar": {
+      "label": "Magmar",
+      "file": "/assets/models/magmar.glb",
+      "officialHeightCm": 130,
+      "targetHeightCm": 110,
+      "orientation": {
+        "yaw": 0,
+        "pitch": -75,
+        "roll": 0
+      },
+      "profiles": {
+        "v2-hiro": {
+          "height": 1.4,
+          "yaw": 0,
+          "pitch": -75,
+          "roll": 0,
+          "x": -0.2,
+          "y": 0,
+          "z": 0.7
+        },
+        "v2-card": {
+          "height": 3.5,
+          "yaw": 0,
+          "pitch": -75,
+          "roll": 0,
+          "x": -2,
+          "y": 0,
+          "z": 0.7
+        },
+        "v3-unified-card": {
+          "heightCm": 110,
+          "yaw": 0,
+          "pitch": -75,
+          "roll": 0,
+          "x": -1.9,
+          "y": 0,
+          "z": 0.4
+        }
+      }
+    },
+    "arcanine": {
+      "label": "Arcanine",
+      "file": "/assets/models/arcanine.glb",
+      "officialHeightCm": 190,
+      "targetHeightCm": 150,
+      "orientation": {
+        "yaw": 0,
+        "pitch": -85,
+        "roll": 0
+      },
+      "profiles": {
+        "v2-hiro": {
+          "height": 1.05,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 0.3,
+          "y": 0,
+          "z": 0.5
+        },
+        "v2-card": {
+          "height": 3.5,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 2,
+          "y": 0,
+          "z": 0.5
+        },
+        "v3-unified-card": {
+          "heightCm": 150,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": -2.0,
+          "y": 0,
+          "z": 0.4
+        }
+      }
+    },
+    "raichu": {
+      "label": "Raichu",
+      "file": "/assets/models/raichu.glb",
+      "officialHeightCm": 80,
+      "targetHeightCm": 70,
+      "orientation": {
+        "yaw": 0,
+        "pitch": -85,
+        "roll": 0
+      },
+      "profiles": {
+        "v2-hiro": {
+          "height": 1.05,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 0.3,
+          "y": 0,
+          "z": 0.5
+        },
+        "v2-card": {
+          "height": 3.5,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 2,
+          "y": 0,
+          "z": 0.5
+        },
+        "v3-unified-card": {
+          "heightCm": 70,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": -1.6,
+          "y": 0,
+          "z": 0.4
+        }
+      }
+    },
+    "electrode": {
+      "label": "Electrode",
+      "file": "/assets/models/electrode.glb",
+      "officialHeightCm": 120,
+      "targetHeightCm": 90,
+      "orientation": {
+        "yaw": 0,
+        "pitch": -85,
+        "roll": 0
+      },
+      "profiles": {
+        "v2-hiro": {
+          "height": 1.05,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 0.3,
+          "y": 0,
+          "z": 0.5
+        },
+        "v2-card": {
+          "height": 3.5,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": 2,
+          "y": 0,
+          "z": 0.5
+        },
+        "v3-unified-card": {
+          "heightCm": 90,
+          "yaw": 0,
+          "pitch": -85,
+          "roll": 0,
+          "x": -1.6,
+          "y": 0,
+          "z": 0.4
+        }
+      }
+    }
+  }
+}

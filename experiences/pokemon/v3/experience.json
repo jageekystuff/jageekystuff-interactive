@@ -1,0 +1,23 @@
+{
+  "id": "pokemon",
+  "schemaVersion": 1,
+  "title": "Pok\u00e9mon Trainer AR",
+  "defaultTrainer": "blaine",
+  "markerProfile": "v3-unified-card",
+  "trainers": {
+    "blaine": {
+      "label": "Blaine",
+      "pokemon": [
+        "magmar",
+        "arcanine"
+      ]
+    },
+    "surge": {
+      "label": "Lt. Surge",
+      "pokemon": [
+        "raichu",
+        "electrode"
+      ]
+    }
+  }
+}
