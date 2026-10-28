@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current platform release: `v3.0-hfx-3` · Status: experimental / in active testing**
+**Current platform release: `v3.0-hfx-5` · Status: experimental / in active testing**
 
 A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
@@ -33,6 +33,8 @@ Older QR codes still encode the original trainer URLs. Their small compatibility
 **V2** offered two trainer-specific pages, separate AR markers and application logic tied to each trainer. The approved Android tests and four GLBs are preserved in `/pokemon/v2/`.
 
 **V3** was introduced because the physical cosplay may use **one shared card** instead of two, and because we needed a configurable platform foundation instead of duplicating AR code for each experience. It has one visitor entrypoint, a shared camera, a trainer selector and contextual model selector. AR initialization, model loading and calibration handling are separated from experience-specific labels and choices. It keeps V2 available for comparison and backward compatibility.
+
+The public V3 landing page hides the **V2 classic** entry by default via `features.legacyV2Link.visible: false` in `experiences/pokemon/v3/experience.json`. The historical V2 URLs, pages and marker patterns remain available directly for compatibility; setting the flag to `true` shows the entry again. This does not affect the internal CAM-01 legacy camera fallback, which is separately hidden through `features.cameraDiagnostics.visible`.
 
 This redesign is a deliberate platform milestone and uses the project-specific `3.0` major label. Version numbers are discrete components, not decimals (`2.9 → 2.10 → 2.11`; hotfixes like `2.12-hfx-1`).
 
@@ -74,6 +76,14 @@ All four models are registered in `assets/config/model-calibrations.json`. V2 an
 V3 converts centimeters to marker units using the marker width as a reference. Its physical dimensions remain **approximate until verified on the actual printed card**. Saved slider adjustments are browser-local for testing and **are not automatically committed to GitHub**. To make a value permanent for everyone, copy the calibration JSON from the panel and incorporate the approved values into `assets/config/model-calibrations.json` in a later release. In V2 the preserved panel still shows its original marker units.
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
+
+## Live calibration reliability (V3.0-hfx-5)
+
+A change to a size or position slider previously re-cloned and remeasured the **whole GLB** every input event, even when the model orientation had not changed. V3 now keeps one neutral measurement copy for the active model and caches bounds by yaw/pitch/roll. Fast slider events are also grouped into animation frames, avoiding unnecessary work that could interfere with AR tracking. The loaded 3D entity stays mounted during calibration.
+
+**Per-device overrides:** when *Ajustar 3D* reports **Custom settings saved on this device**, that browser has a saved `localStorage` override for the selected Pokémon. Another browser or an incognito session may show different coordinates because it uses the committed `assets/config/model-calibrations.json`. Use **Reset** on each Pokémon to restore the public defaults; this does not overwrite GitHub. Do not compare two users' appearance without first checking their settings and the camera/marker distance.
+
+**Validation status:** JavaScript syntax and geometry-update caching tested with browser mocks. Live marker tracking, rotation sliders and photography still require a quick physical test. If the marker is lost during a slider move, we must diagnose tracking separately from rendering.
 
 ## Camera diagnostics visibility (V3.0-hfx-4)
 

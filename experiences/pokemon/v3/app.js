@@ -50,7 +50,7 @@
   try {
     const [shared, experience] = await Promise.all([
       window.JageekystuffConfig.load(),
-      fetch('/experiences/pokemon/v3/experience.json?v=3.0', { cache: 'no-store' })
+      fetch('/experiences/pokemon/v3/experience.json?v=3.0-hfx-5', { cache: 'no-store' })
         .then((response) => {
           if (!response.ok) throw new Error('Experience configuration unavailable');
           return response.json();
@@ -64,12 +64,20 @@
     const cameraTools = document.querySelector('.camera-test-tools');
     if (cameraTools) cameraTools.hidden = !cameraDiagnosticsVisible;
 
+    // Keep V2 available as a historical URL, but do not show it to visitors by default.
+    // Set features.legacyV2Link.visible to true to restore the landing link.
+    const legacyV2Link = document.getElementById('legacy-v2-link');
+    if (legacyV2Link) {
+      legacyV2Link.hidden = experience.features?.legacyV2Link?.visible !== true;
+    }
+
     let activeTrainer = experience.defaultTrainer;
     let activeModel = experience.trainers[activeTrainer].pokemon[0];
     let busy = false;
     const activeModelByTrainer = {};
     const storagePrefix = 'jageekystuff-v3-unified-card-';
     const settingsByModel = {};
+    const localOverrides = new Set();
     const settingKeys = ['heightCm', 'yaw', 'pitch', 'roll', 'x', 'y', 'z'];
 
     function profileFor(modelId) {
@@ -81,6 +89,7 @@
         for (const key of settingKeys) {
           if (Number.isFinite(Number(local[key])) && local[key] !== null) {
             fallback[key] = Number(local[key]);
+            localOverrides.add(modelId);
           }
         }
       } catch {
@@ -116,7 +125,9 @@
           ['heightCm', 'yaw', 'pitch', 'roll'].includes(key) ? 0 : 2,
         );
       }
-      adjustmentsFeedback.textContent = 'Testing values stay on this device. Copy them to approve a calibration.';
+      adjustmentsFeedback.textContent = localOverrides.has(activeModel) ?
+        'Custom settings saved on this device. Use Reset for the public defaults.' :
+        'Public defaults. Changes here stay only on this device.';
     }
 
     function renderButtons() {
@@ -193,7 +204,12 @@
       input.addEventListener('input', () => {
         const key = input.dataset.adjust;
         settingsByModel[activeModel][key] = Number(input.value);
-        refreshAdjustments();
+        const output = document.querySelector(`[data-out="${key}"]`);
+        if (output) output.textContent = Number(input.value).toFixed(
+          ['heightCm', 'yaw', 'pitch', 'roll'].includes(key) ? 0 : 2,
+        );
+        localOverrides.add(activeModel);
+        adjustmentsFeedback.textContent = 'Custom settings saved on this device. Use Reset for the public defaults.';
         try {
           localStorage.setItem(storagePrefix + activeModel,
             JSON.stringify(settingsByModel[activeModel]));
@@ -218,6 +234,7 @@
         ...shared.models[activeModel].profiles[experience.markerProfile],
       };
       try { localStorage.removeItem(storagePrefix + activeModel); } catch { /* optional */ }
+      localOverrides.delete(activeModel);
       refreshAdjustments();
       engine.updateSettings(settingsByModel[activeModel]);
     });

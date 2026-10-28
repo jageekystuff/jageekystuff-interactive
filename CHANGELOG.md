@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0-hfx-5] — 2026-10-28 — Reduce live-calibration glitches (CAL-01 / CAL-02)
+
+- Reuse a single neutral geometry measurement copy while calibrating the active V3 model. Recalculate oriented bounds **only** when yaw/pitch/roll changes, not for every height or X/Y/Z slider event.
+- Coalesce rapid slider events into an animation-frame update; keep the loaded GLB mounted while changing its transform, and prevent a faulty recalculation from stopping the AR camera.
+- Stop rewriting all slider values on every input event, which could interfere with dragging on touch devices.
+- Distinguish **public defaults** from per-device calibration overrides in the adjustment panel. The existing **Reset** button returns the active model to the published JSON. Local settings are **not deleted** by this release.
+- Preserve the public calibration JSON, camera alignment, photo capture, QR/pattern, GLBs, and all V2 files unchanged.
+- Requires a short real-device regression test: editing X/Y/Z and height should no longer trigger expensive geometry cloning. An intermittent loss of marker tracking is still possible and must be diagnosed separately if seen.
+- Hide the **V2 classic** link on the public V3 landing page through `features.legacyV2Link.visible: false`; V2 routes and legacy QR redirects remain functional and unchanged. This adds no new version or major functionality.
+
 ## [3.0-hfx-4] — 2026-10-28 — Hide CAM-01 diagnostics behind a feature flag
 
 - Hide **CAM-01 · Matched camera framing** inside V3 **Ajustar 3D** by default; the controls and diagnostic engine remain available for future troubleshooting.

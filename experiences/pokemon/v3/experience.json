@@ -23,6 +23,9 @@
   "features": {
     "cameraDiagnostics": {
       "visible": false
+    },
+    "legacyV2Link": {
+      "visible": false
     }
   }
 }

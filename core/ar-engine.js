@@ -59,7 +59,9 @@
     let sceneReady = false;
     let modelRequest = 0;
     let cachedModel;
+    let measurementSource = null;
     let currentSettings;
+    let settingsFrame = 0;
     let markerVisible = false;
     let framingMode = 'aligned';
     let cameraNote = 'Waiting for camera video';
@@ -198,7 +200,7 @@
       } : null;
       const aligned = difference && Object.values(difference).every((v) => v <= 2);
       return {
-        release: '3.0-hfx-3',
+        release: '3.0-hfx-5',
         framing: framingMode,
         modeExplanation: framingMode === 'aligned' ?
           'Full source camera image; video and 3D renderer use the same 4:3 rectangle.' :
@@ -262,34 +264,67 @@
       onInfo?.(message);
     }
 
+    // CAL-01: Never clone and traverse an entire GLB on every slider movement.
+    // A measurement source is built once per loaded model. Its bounding box is
+    // recalculated only when the model orientation changes; height and X/Y/Z
+    // updates reuse the cached metrics without touching its mesh hierarchy.
     function measuredModelBounds(model, settings) {
       const THREE = window.AFRAME.THREE;
-      const copy = model.clone(true);
-      copy.position.set(0, 0, 0);
-      copy.rotation.set(0, 0, 0);
-      copy.scale.set(1, 1, 1);
-      copy.updateMatrixWorld(true);
+      if (!measurementSource || measurementSource.model !== model) {
+        const copy = model.clone(true);
+        copy.position.set(0, 0, 0);
+        copy.rotation.set(0, 0, 0);
+        copy.scale.set(1, 1, 1);
+        copy.updateMatrixWorld(true);
 
-      const original = new THREE.Box3().setFromObject(copy);
-      if (original.isEmpty()) throw new Error('3D model has no geometry');
-      const center = original.getCenter(new THREE.Vector3());
-      copy.position.sub(center);
+        const original = new THREE.Box3().setFromObject(copy);
+        if (original.isEmpty()) throw new Error('3D model has no geometry');
+        const center = original.getCenter(new THREE.Vector3());
+        copy.position.sub(center);
+        const pivot = new THREE.Group();
+        pivot.add(copy);
+        measurementSource = { model, pivot, center, rotationKey: null, metrics: null };
+      }
 
-      const pivot = new THREE.Group();
+      const rotationKey = [settings.pitch, settings.yaw, settings.roll].join('|');
+      if (measurementSource.rotationKey === rotationKey && measurementSource.metrics) {
+        return measurementSource.metrics;
+      }
+      const pivot = measurementSource.pivot;
       pivot.rotation.set(
         radians(settings.pitch),
         radians(settings.yaw),
         radians(settings.roll),
         'YXZ',
       );
-      pivot.add(copy);
       pivot.updateMatrixWorld(true);
       const rotated = new THREE.Box3().setFromObject(pivot);
       const height = rotated.max.y - rotated.min.y;
       if (!(height > 0) || !Number.isFinite(height)) {
         throw new Error('Cannot calculate oriented model height');
       }
-      return { center, orientedHeight: height, orientedMinY: rotated.min.y };
+      const metrics = {
+        center: measurementSource.center,
+        orientedHeight: height,
+        orientedMinY: rotated.min.y,
+      };
+      measurementSource.rotationKey = rotationKey;
+      measurementSource.metrics = metrics;
+      return metrics;
+    }
+
+    function queueSettingsUpdate() {
+      // Coalesce rapid range-input events into one render-frame update.
+      if (settingsFrame) return;
+      settingsFrame = window.requestAnimationFrame(() => {
+        settingsFrame = 0;
+        try {
+          applySettings();
+        } catch (error) {
+          // Do not break the camera or unmount the currently loaded GLB.
+          info(`Calibration update failed: ${error.message}`);
+        }
+      });
     }
 
     function applySettings() {
@@ -299,15 +334,17 @@
       const pitch = safe('pitch');
       const yaw = safe('yaw');
       const roll = safe('roll');
-      placement.object3D.rotation.set(radians(pitch), radians(yaw), radians(roll), 'YXZ');
-      placement.object3D.position.set(safe('x'), safe('y'), safe('z'));
-
       if (!cachedModel || !asset) return;
       const metrics = measuredModelBounds(cachedModel, s);
       // One AR.js marker unit corresponds to approximately one marker width.
       // The target is measured AFTER rotation, unlike the legacy V2 calibration.
       const desiredUnits = Math.max(10, safe('heightCm', 70)) / options.markerWidthCm;
       const scale = desiredUnits / metrics.orientedHeight;
+      if (!Number.isFinite(scale) || !(scale > 0)) {
+        throw new Error('Invalid model scale');
+      }
+      placement.object3D.rotation.set(radians(pitch), radians(yaw), radians(roll), 'YXZ');
+      placement.object3D.position.set(safe('x'), safe('y'), safe('z'));
       cachedModel.scale.setScalar(scale);
       cachedModel.position.set(
         -metrics.center.x * scale,
@@ -322,6 +359,11 @@
       if (!sceneReady || !selected) return;
       const request = ++modelRequest;
       cachedModel = null;
+      measurementSource = null;
+      if (settingsFrame) {
+        window.cancelAnimationFrame(settingsFrame);
+        settingsFrame = 0;
+      }
       asset?.remove();
       asset = document.createElement('a-entity');
       asset.id = 'active-ar-model';
@@ -444,9 +486,9 @@
       if (!url) throw new Error('Model URL is required');
       const changed = selected?.url !== url;
       selected = { url, label };
-      currentSettings = settings;
+      currentSettings = { ...settings };
       if (changed) loadModel();
-      else applySettings();
+      else queueSettingsUpdate();
     }
 
     return {
@@ -461,8 +503,8 @@
       getCameraDiagnostics,
       capturePhoto,
       updateSettings(settings) {
-        currentSettings = settings;
-        applySettings();
+        currentSettings = { ...settings };
+        queueSettingsUpdate();
       },
     };
   }

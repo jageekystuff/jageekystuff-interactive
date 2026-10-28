@@ -8,7 +8,7 @@
 
   async function load() {
     if (!currentRequest) {
-      currentRequest = fetch('/assets/config/model-calibrations.json?v=3.0', {
+      currentRequest = fetch('/assets/config/model-calibrations.json?v=3.0-hfx-5', {
         cache: 'no-store',
       })
         .then((response) => {
