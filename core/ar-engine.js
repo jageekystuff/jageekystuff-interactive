@@ -200,7 +200,7 @@
       } : null;
       const aligned = difference && Object.values(difference).every((v) => v <= 2);
       return {
-        release: '3.0-hfx-5',
+        release: '3.0-hfx-6',
         framing: framingMode,
         modeExplanation: framingMode === 'aligned' ?
           'Full source camera image; video and 3D renderer use the same 4:3 rectangle.' :
@@ -408,7 +408,11 @@
         : `type="pattern" url="${options.markerUrl}"`;
       const ratio = options.hiro ? 0.5 : options.patternRatio;
 
+      // Marker-based AR uses visual tracking from the camera, not motion-sensor orientation.
+      // Avoid A-Frame's redundant and poorly contrasted iOS motion permission dialog.
+      // Do not disable the actual camera permission request.
       host.innerHTML = `<a-scene embedded vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
         renderer="antialias: true; alpha: true; colorManagement: true"
         arjs="sourceType: webcam; sourceWidth: ${width}; sourceHeight: ${height};
           displayWidth: ${width}; displayHeight: ${height}; debugUIEnabled: false;

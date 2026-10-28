@@ -6,9 +6,9 @@ Open testing notes. **Not yet fixed.** No iOS issue below is confirmed as a Safa
 
 | ID | Observation | Follow-up test |
 | --- | --- | --- |
-| IOS-01 | iPhone UI colors and contrast reportedly differ from Android; the motion-sensor permission overlay may have low text contrast. | Compare with identical URL, iOS and Safari versions, and light/dark settings. Inspect CSS/computed colors. |
-| IOS-02 | Magmar/Raichu may face different directions on iPhone when viewing a marker displayed on another phone. | Match camera and marker pose across devices, check whether the issue is perspective or model transform/tracking. |
-| IOS-03 | Browser prompts for device motion/orientation permissions. | Confirm which sensors are required for the current marker-tracked AR mode and whether the prompt can be avoided safely. |
+| IOS-01 | Confirmed: A-Frame motion-sensor permission popup was white-on-white on iPhone Chrome. V3.0-hfx-6 disables this optional popup for marker tracking. | **Needs device verification** on iPhone after deployment; camera permission must still work. |
+| IOS-02 | Observed: Magmar appears upside-down in AR/photo when iPhone views the QR marker from a laptop/monitor. | **Deferred** for event. Printed card is the target; do not alter Pokémon default rotations to compensate for a screen-mounted, rotated marker. |
+| IOS-03 | A-Frame requested an extra device-motion/orientation permission in iOS marker AR. | V3.0-hfx-6 disables the redundant A-Frame dialog. Verify marker tracking on printed card; do not disable native camera permission. |
 | IOS-04 | Marker tracking and camera framing may differ between Android Chrome and iOS Safari. | Test on printed marker at fixed distance/angle under constant lighting. Record device/browser version and screenshots. |
 
 These are **backlog items**, not verified diagnoses. Do not change working Android behavior merely to address an unconfirmed iOS hypothesis.

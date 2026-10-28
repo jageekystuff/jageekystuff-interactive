@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current platform release: `v3.0-hfx-5` · Status: experimental / in active testing**
+**Current platform release: `v3.0-hfx-6` · Status: experimental / in active testing**
 
 A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
@@ -76,6 +76,19 @@ All four models are registered in `assets/config/model-calibrations.json`. V2 an
 V3 converts centimeters to marker units using the marker width as a reference. Its physical dimensions remain **approximate until verified on the actual printed card**. Saved slider adjustments are browser-local for testing and **are not automatically committed to GitHub**. To make a value permanent for everyone, copy the calibration JSON from the panel and incorporate the approved values into `assets/config/model-calibrations.json` in a later release. In V2 the preserved panel still shows its original marker units.
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
+
+## iOS motion-sensor dialog (V3.0-hfx-6)
+
+The marker-based V3 scene does not need the phone's motion/orientation sensors to
+place models. On iOS, A-Frame displayed an extra sensor-permission dialog whose
+white background inherited the site's light text color, making it hard to read.
+The scene now uses `device-orientation-permission-ui="enabled: false"` to
+suppress that **extra** dialog. Browser camera access is still required and is
+requested normally. This is a narrowly scoped iOS UX fix; re-test on a real
+iPhone before considering it validated.
+
+The screen-based-marker upside-down model report is tracked in
+`docs/KNOWN_ISSUES.md`. The model rotations and the printable QR are unchanged.
 
 ## Live calibration reliability (V3.0-hfx-5)
 

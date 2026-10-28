@@ -50,7 +50,7 @@
   try {
     const [shared, experience] = await Promise.all([
       window.JageekystuffConfig.load(),
-      fetch('/experiences/pokemon/v3/experience.json?v=3.0-hfx-5', { cache: 'no-store' })
+      fetch('/experiences/pokemon/v3/experience.json?v=3.0-hfx-6', { cache: 'no-store' })
         .then((response) => {
           if (!response.ok) throw new Error('Experience configuration unavailable');
           return response.json();
