@@ -75,9 +75,29 @@ V3 converts centimeters to marker units using the marker width as a reference. I
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
 
-## Camera framing: V3.0-hfx-3 (CAM-01)
+## Camera diagnostics visibility (V3.0-hfx-4)
 
-In V3, open **Ajustar 3D → CAM-01 · Matched camera framing** after starting the camera. These controls are for testing, not intended as the final visitor interface.
+The CAM-01 diagnostics remain implemented but are **hidden by default** in V3.
+To enable them for a future camera test, edit
+`experiences/pokemon/v3/experience.json`:
+
+```json
+"features": {
+  "cameraDiagnostics": {
+    "visible": true
+  }
+}
+```
+
+Restore `false` after testing. This flag controls only the visibility of the
+**CAM-01 · Matched camera framing** section inside **Ajustar 3D**.
+It does not disable the AR camera, tracking, the active **Aligned view** mode,
+Pokémon calibrations or the photo capture controls. Publish the change to make
+it visible to visitors. V2 is not modified.
+
+## Camera framing: V3.0-hfx-4 (CAM-01)
+
+In V3, the **CAM-01 · Matched camera framing** block is hidden by default. When the feature flag is enabled, open **Ajustar 3D → CAM-01** after starting the camera. These controls are for developer testing, not the visitor interface.
 
 - **Aligned view (default):** displays the *entire* camera feed and draws 3D models into a renderer of the same visible width and height. On a portrait phone with a 4:3 feed, blank bands above and below the picture are normal; they are not missing camera pixels.
 - **Legacy view (fallback):** restores the previous AR.js fullscreen layout for comparison and troubleshooting if the aligned view causes tracking or pose problems.
@@ -91,8 +111,8 @@ The confusing **Request 1×** button from `v3.0-hfx-1` was removed: the Xiaomi a
 2. Tap **Start AR camera**, grant permission and aim at that **same printed QR-marker** on a matte, light-colored background.
 3. Choose Blaine or Lt. Surge and then a model; the camera should remain open when you switch.
 4. Use **Ajustar 3D** only for calibration testing. `Reset` reverts to the committed profile; `Copy settings` exports values to send for review.
-5. First compare Aligned/Legacy view at 100 cm with the printed marker, then again at 200 cm. The QR must remain visible and the 3D model should follow it.
-6. Use **Copy camera diagnostics** and check `videoBox`, `canvasBox`, and `layersAligned`. Keep 3D height calibration for a later test, after camera framing is verified.
+5. Use the default Aligned camera view and verify tracking on the printed marker at 100–200 cm. If more camera diagnosis is necessary, temporarily enable `features.cameraDiagnostics.visible` in the V3 experience configuration.
+6. With diagnostics enabled, use **Copy camera diagnostics** to compare `videoBox`, `canvasBox`, and `layersAligned`. For public use, keep the diagnostics block hidden.
 7. For a fallback marker test, open `/?marker=hiro` and point at the HIRO test marker.
 
 The camera, models and pattern recognition cannot be fully validated until this build is deployed and tested on actual Android and iOS devices. The earlier V2 physical-marker and iPhone limitations remain listed in `docs/KNOWN_ISSUES.md`.
@@ -104,7 +124,7 @@ The camera, models and pattern recognition cannot be fully validated until this 
 - Cloudflare configuration: **Framework: None**, **Build command: `exit 0`**, **Output directory: `.`** and repository root as root directory.
 - Prettier configuration in `.prettierrc.json`; `.editorconfig` for 2-space indent. Neither overrides your work projects.
 - Update `VERSION`, `README.md` (when relevant) and `CHANGELOG.md` per release. Minor labels use increasing integers; `3.9` goes to `3.10`, never `4.0` just because of the numbering.
-- Hotfix naming is `v3.0-hfx-3` for follow-up fixes to V3.0 without changing the next regular version.
+- Hotfix naming is `v3.0-hfx-4` for follow-up fixes to V3.0 without changing the next regular version.
 
 ## Deferred features — not in V3.0
 

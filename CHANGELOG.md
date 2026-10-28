@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0-hfx-4] — 2026-10-28 — Hide CAM-01 diagnostics behind a feature flag
+
+- Hide **CAM-01 · Matched camera framing** inside V3 **Ajustar 3D** by default; the controls and diagnostic engine remain available for future troubleshooting.
+- Add `features.cameraDiagnostics.visible: false` to `experiences/pokemon/v3/experience.json`. Changing it to `true` restores the full CAM-01 section without source-code edits.
+- Preserve **Aligned view** as the active camera layout. No changes to camera tracking, AR rendering, Pokémon model assets, calibration data, marker patterns, photo capture, or historical V2 experience.
+
+
 ## [3.0-hfx-3] — 2026-10-28 — Compact controls and experimental AR photography
 
 - Published the **user-tested but still experimental Raichu V3 calibration**: height 120 cm, yaw 0, pitch -85, roll 0, X=0.5, Y=-2.3, Z=0.4. Other Pokémon and V2 profiles are unchanged.

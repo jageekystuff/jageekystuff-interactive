@@ -775,6 +775,11 @@ body.ar-body .ar-start {
   }
 }
 
+/* CAM-01: the diagnostic controls may be disabled by experience feature flags. */
+.unified-ar .camera-test-tools[hidden] {
+  display: none !important;
+}
+
 /* V3.0-hfx-1: developer-only camera diagnostics; no V2 styles are changed. */
 .unified-ar .camera-test-tools {
   margin: 14px 0;

@@ -58,6 +58,12 @@
     ]);
     if (!shared) throw new Error('Shared calibration configuration unavailable');
 
+    // CAM-01 stays available for troubleshooting, but is hidden in the public UI.
+    // Set features.cameraDiagnostics.visible to true in experience.json to restore it.
+    const cameraDiagnosticsVisible = experience.features?.cameraDiagnostics?.visible === true;
+    const cameraTools = document.querySelector('.camera-test-tools');
+    if (cameraTools) cameraTools.hidden = !cameraDiagnosticsVisible;
+
     let activeTrainer = experience.defaultTrainer;
     let activeModel = experience.trainers[activeTrainer].pokemon[0];
     let busy = false;
