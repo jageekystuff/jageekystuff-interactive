@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0-hfx-6] — 2026-10-28 — Suppress unnecessary iOS sensor-permission dialog
+
+- In marker-based V3, explicitly disable A-Frame's device orientation **permission UI**. The app tracks printed QR markers using the camera and does not rely on phone motion sensors for AR placement.
+- Prevent the unreadable white-on-white A-Frame dialog observed in Chrome on iPhone. The native camera permission remains unchanged.
+- Record inverted Pokémon on markers viewed from a computer/other screen as a known issue; no model or marker changes in this release.
+- No changes to shared 3D models, marker patterns, camera frame alignment, public calibrations, trainer selection or photo capture.
+- **Validation pending:** confirm on real iPhone that camera opens, the redundant motion-sensor dialog no longer appears, and marker tracking/photo capture still work.
+
+
 ## [3.0-hfx-5] — 2026-10-28 — Reduce live-calibration glitches (CAL-01 / CAL-02)
 
 - Reuse a single neutral geometry measurement copy while calibrating the active V3 model. Recalculate oriented bounds **only** when yaw/pitch/roll changes, not for every height or X/Y/Z slider event.
