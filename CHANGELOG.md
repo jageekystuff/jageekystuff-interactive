@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0-hfx-3] — 2026-10-28 — Compact controls and experimental AR photography
+
+- Published the **user-tested but still experimental Raichu V3 calibration**: height 120 cm, yaw 0, pitch -85, roll 0, X=0.5, Y=-2.3, Z=0.4. Other Pokémon and V2 profiles are unchanged.
+- Replaced the oversized V3 selection panel with two compact rows and accessible trainer/model buttons.
+- Added an always-accessible hide/show control, small calibration gear, and a camera shutter button.
+- Added an **experimental** AR photo preview with Save, Share (when supported), and Retake. It composites the camera video with the AR WebGL canvas, excluding HTML controls; it needs a real-device test. File resolution is limited by the camera stream.
+- Added a compact desktop/Mac layout using the same mouse and keyboard controls. Mac webcam and Safari compatibility remain unverified.
+- Preserved V3 camera aligned/legacy options, QR/pattern assets, GLBs, and historical V2 pages.
+
 ## [3.0-hfx-2] — 2026-10-26 — Match camera and WebGL display rectangles
 
 - Replaced the previous experimental wide CSS transform with a **matched-aspect, centered camera stage**, based on the camera track’s real video dimensions. Its WebGL viewport and video use the same rectangle instead of being scaled from different starting sizes.

@@ -11,6 +11,16 @@
   const trainerButtons = document.getElementById('trainer-options');
   const modelButtons = document.getElementById('model-options');
   const toggleAdjustments = document.getElementById('open-adjustments');
+  const selectionControls = document.getElementById('selection-controls');
+  const toggleControls = document.getElementById('toggle-controls');
+  const captureButton = document.getElementById('capture-photo');
+  const actions = document.getElementById('v3-actions');
+  const photoDialog = document.getElementById('photo-dialog');
+  const photoPreview = document.getElementById('photo-preview');
+  const photoFeedback = document.getElementById('photo-feedback');
+  const captureFeedback = document.getElementById('capture-feedback');
+  let photoBlob = null;
+  let photoUrl = null;
   const adjustmentPanel = document.getElementById('ar-adjustments');
   const inputs = [...document.querySelectorAll('[data-adjust]')];
   const adjustmentsFeedback = document.getElementById('adjust-feedback');
@@ -20,11 +30,12 @@
   const legacyCameraButton = document.getElementById('camera-legacy');
   const params = new URLSearchParams(window.location.search);
   const useHiro = params.get('marker') === 'hiro';
+  actions.classList.add('hidden');
 
   // AR.js creates fullscreen camera elements with their own stacking contexts.
   // Keep all interactive controls together in a separate topmost mobile layer.
   [document.querySelector('.ar-header'), document.querySelector('.ar-bottom'),
-    toggleAdjustments, adjustmentPanel, startScreen].forEach((element) => {
+    toggleAdjustments, adjustmentPanel, actions, photoDialog, captureFeedback, startScreen].forEach((element) => {
     if (element) uiLayer.appendChild(element);
   });
 
@@ -218,6 +229,86 @@
       }
     });
 
+    // Keep the scene visible while allowing one-tap recovery of the controls.
+    function setControlsHidden(hidden) {
+      selectionControls.classList.toggle('hidden', hidden);
+      actions.classList.toggle('v3-controls-hidden', hidden);
+      document.body.classList.toggle('v3-ui-hidden', hidden);
+      toggleControls.setAttribute('aria-expanded', String(!hidden));
+      toggleControls.setAttribute('aria-label', hidden ? 'Show trainer and Pokémon controls' :
+        'Hide trainer and Pokémon controls');
+      toggleControls.title = hidden ? 'Show controls' : 'Hide controls';
+      toggleControls.textContent = hidden ? '☰' : '⌄';
+      if (hidden) {
+        adjustmentPanel.classList.add('hidden');
+        toggleAdjustments.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    toggleControls.addEventListener('click', () => {
+      setControlsHidden(!selectionControls.classList.contains('hidden'));
+    });
+
+    function closePhoto() {
+      photoDialog.classList.add('hidden');
+      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      photoUrl = null;
+      photoBlob = null;
+      photoPreview.removeAttribute('src');
+      photoFeedback.textContent = '';
+    }
+
+    const photoName = () => `jageekystuff-ar-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+
+    captureButton.addEventListener('click', async () => {
+      captureButton.disabled = true;
+      captureFeedback.classList.remove('hidden');
+      captureFeedback.textContent = 'Capturing AR photo…';
+      try {
+        photoBlob = await engine.capturePhoto();
+        if (photoUrl) URL.revokeObjectURL(photoUrl);
+        photoUrl = URL.createObjectURL(photoBlob);
+        photoPreview.src = photoUrl;
+        photoFeedback.textContent = `Photo ready (${Math.round(photoBlob.size / 1024)} KB).`;
+        photoDialog.classList.remove('hidden');
+        captureFeedback.classList.add('hidden');
+        document.getElementById('photo-save').focus();
+      } catch (error) {
+        captureFeedback.textContent = `Photo unavailable: ${error.message}`;
+      } finally {
+        captureButton.disabled = false;
+      }
+    });
+
+    document.getElementById('photo-close').addEventListener('click', closePhoto);
+    document.getElementById('photo-retake').addEventListener('click', closePhoto);
+    document.getElementById('photo-save').addEventListener('click', () => {
+      if (!photoUrl) return;
+      const link = document.createElement('a');
+      link.href = photoUrl;
+      link.download = photoName();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      photoFeedback.textContent = 'Download requested. Check your Photos or Downloads folder.';
+    });
+    document.getElementById('photo-share').addEventListener('click', async () => {
+      if (!photoBlob) return;
+      const file = new File([photoBlob], photoName(), { type: 'image/png' });
+      if (typeof navigator.share !== 'function' ||
+          (typeof navigator.canShare === 'function' && !navigator.canShare({ files: [file] }))) {
+        photoFeedback.textContent = 'Sharing images is not available here. Use Save photo.';
+        return;
+      }
+      try {
+        await navigator.share({ files: [file], title: 'Jageekystuff AR photo' });
+        photoFeedback.textContent = 'Photo passed to the share menu.';
+      } catch (error) {
+        if (error.name !== 'AbortError') photoFeedback.textContent =
+          'Sharing failed. Use Save photo instead.';
+      }
+    });
+
     launchButton.addEventListener('click', async () => {
       if (busy) return;
       busy = true;
@@ -228,6 +319,7 @@
         if (!window.isSecureContext) throw new Error('Please use HTTPS');
         await engine.start();
         startScreen.classList.add('hidden');
+        actions.classList.remove('hidden');
       } catch (error) {
         bootStatus.textContent = `Unable to start AR: ${error.message}. Check permissions and connection.`;
         setStatus('AR unavailable');

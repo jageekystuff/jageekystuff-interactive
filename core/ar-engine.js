@@ -198,7 +198,7 @@
       } : null;
       const aligned = difference && Object.values(difference).every((v) => v <= 2);
       return {
-        release: '3.0-hfx-2',
+        release: '3.0-hfx-3',
         framing: framingMode,
         modeExplanation: framingMode === 'aligned' ?
           'Full source camera image; video and 3D renderer use the same 4:3 rectangle.' :
@@ -396,6 +396,50 @@
       status('Camera starting · aim at marker');
     }
 
+    // Compose the live camera frame and the transparent WebGL AR layer.
+    // The normal screen controls are deliberately excluded from the image.
+    async function capturePhoto() {
+      const video = videoElement();
+      const canvas = sceneCanvas();
+      const scene = sceneElement();
+      if (framingMode !== 'aligned') {
+        throw new Error('Select Aligned view in calibration settings before taking a photo.');
+      }
+      if (!video || !canvas || !scene?.renderer || !scene.camera ||
+          video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+        throw new Error('Camera is not ready. Try again after the video appears.');
+      }
+      if (!markerVisible) {
+        throw new Error('Point the camera at the printed QR marker before taking a photo.');
+      }
+      const vr = video.getBoundingClientRect();
+      const cr = canvas.getBoundingClientRect();
+      if (Math.max(Math.abs(vr.x - cr.x), Math.abs(vr.y - cr.y),
+        Math.abs(vr.width - cr.width), Math.abs(vr.height - cr.height)) > 3) {
+        throw new Error('Camera and 3D overlay are not aligned yet.');
+      }
+      // Use actual camera dimensions. The output is not an upscaled screenshot.
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+      if (!(width > 0 && height > 0)) throw new Error('Camera frame is unavailable.');
+      const output = document.createElement('canvas');
+      output.width = width;
+      output.height = height;
+      const ctx = output.getContext('2d');
+      if (!ctx) throw new Error('Photo canvas unavailable.');
+      ctx.drawImage(video, 0, 0, width, height);
+      // Read the WebGL drawing buffer immediately after an explicit render;
+      // preserveDrawingBuffer is intentionally not enabled for all frames.
+      scene.renderer.render(scene.object3D, scene.camera);
+      ctx.drawImage(canvas, 0, 0, width, height);
+      return new Promise((resolve, reject) => {
+        output.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Unable to generate photo.'));
+        }, 'image/png');
+      });
+    }
+
     function select(url, label, settings) {
       if (!url) throw new Error('Model URL is required');
       const changed = selected?.url !== url;
@@ -415,6 +459,7 @@
         reportCamera();
       },
       getCameraDiagnostics,
+      capturePhoto,
       updateSettings(settings) {
         currentSettings = settings;
         applySettings();

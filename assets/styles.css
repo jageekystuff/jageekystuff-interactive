@@ -862,3 +862,225 @@ body.ar-body.unified-ar.ar-camera-aligned video.jg-ar-feed {
   transform: none !important;
   object-fit: fill !important; /* CSS rectangle shares the actual track aspect ratio. */
 }
+
+/* V3.0-hfx-3: mobile-first compact AR UI, isolated from legacy V2. */
+.unified-ar .visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body.ar-body.unified-ar .ar-ui-layer > .v3-actions,
+body.ar-body.unified-ar .ar-ui-layer > .v3-photo-dialog,
+body.ar-body.unified-ar .ar-ui-layer > .v3-capture-feedback {
+  pointer-events: auto !important;
+}
+
+body.ar-body.unified-ar .adjust-toggle {
+  top: calc(env(safe-area-inset-top, 0px) + 66px) !important;
+  right: 12px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  font-size: 24px !important;
+  border-radius: 50% !important;
+  background: #172036ed !important;
+  color: #fff !important;
+  border: 1px solid #8290ae !important;
+}
+
+body.ar-body.unified-ar .adjust-panel {
+  top: calc(env(safe-area-inset-top, 0px) + 116px) !important;
+}
+
+body.ar-body.unified-ar .ar-bottom.v3-controls {
+  width: min(calc(100vw - 16px), 390px) !important;
+  max-width: none !important;
+  padding: 8px 10px 9px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  border-radius: 14px !important;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 7px) !important;
+}
+
+.unified-ar .v3-control-group {
+  display: grid;
+  grid-template-columns: 62px minmax(0,1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 3px 0;
+}
+
+.unified-ar .v3-label {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.unified-ar .v3-control-group .choice {
+  margin: 0;
+  gap: 5px;
+  min-width: 0;
+}
+
+.unified-ar .v3-control-group .choice button {
+  min-height: 34px;
+  border-radius: 9px;
+  padding: 5px 7px;
+  font-size: 12px;
+  line-height: 1.1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+body.ar-body.unified-ar .v3-actions {
+  position: fixed;
+  z-index: 12;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 103px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: bottom .15s ease;
+}
+
+body.ar-body.unified-ar .v3-actions.v3-controls-hidden {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+}
+
+.unified-ar .v3-action-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #a7b4d6;
+  color: #fff;
+  background: #111b30f2;
+  font-size: 21px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 5px 18px #0008;
+}
+
+.unified-ar .v3-action-button.v3-shutter {
+  width: 62px;
+  height: 62px;
+  background: #fff;
+  color: #111a2e;
+  border: 5px solid #262e45;
+  font-size: 27px;
+}
+
+.unified-ar .v3-action-button:disabled {
+  opacity: .55;
+}
+
+body.ar-body.unified-ar .v3-photo-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  background: #080c17f5;
+  padding: 16px;
+  overflow: auto;
+}
+
+.unified-ar .v3-photo-card {
+  width: min(100%, 500px);
+  max-height: 94dvh;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 18px;
+  background: #1c2437;
+  border: 1px solid #687695;
+}
+
+.unified-ar .v3-photo-heading,
+.unified-ar .v3-photo-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.unified-ar .v3-photo-heading button,
+.unified-ar .v3-photo-buttons button {
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #7a89ac;
+  background: #2c3c5e;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.unified-ar .v3-photo-card img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(66dvh, 650px);
+  margin: 10px auto;
+  object-fit: contain;
+}
+
+.unified-ar .v3-photo-buttons button { flex: 1; }
+.unified-ar .v3-photo-card p { font-size: 12px; color: #cdd7e9; }
+
+body.ar-body.unified-ar .v3-capture-feedback {
+  position: fixed;
+  z-index: 24;
+  left: 50%;
+  bottom: 200px;
+  transform: translateX(-50%);
+  width: min(340px, 90vw);
+  padding: 10px;
+  background: #19243afa;
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (min-width: 850px) {
+  body.ar-body.unified-ar .ar-bottom.v3-controls {
+    left: auto !important;
+    right: 18px !important;
+    bottom: 18px !important;
+    transform: none !important;
+    width: 335px !important;
+  }
+  body.ar-body.unified-ar .v3-actions {
+    left: auto;
+    right: 354px;
+    bottom: 23px;
+    transform: none;
+  }
+  body.ar-body.unified-ar .v3-actions.v3-controls-hidden {
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
+/* In photo-focused mode, leave only the shutter and the reversible show button. */
+body.ar-body.unified-ar.v3-ui-hidden .ar-header,
+body.ar-body.unified-ar.v3-ui-hidden .adjust-toggle {
+  display: none !important;
+}
+
+.unified-ar .v3-shutter svg {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: #172138;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}

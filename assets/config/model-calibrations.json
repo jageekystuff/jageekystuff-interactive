@@ -118,12 +118,12 @@
           "z": 0.5
         },
         "v3-unified-card": {
-          "heightCm": 70,
+          "heightCm": 120,
           "yaw": 0,
           "pitch": -85,
           "roll": 0,
-          "x": -1.6,
-          "y": 0,
+          "x": 0.5,
+          "y": -2.3,
           "z": 0.4
         }
       }

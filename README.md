@@ -1,6 +1,6 @@
 # Jageekystuff Interactive Experiences
 
-**Current platform release: `v3.0-hfx-2` · Status: experimental / in active testing**
+**Current platform release: `v3.0-hfx-3` · Status: experimental / in active testing**
 
 A configurable, fan-made cosplay AR platform designed and produced by **Johán Hernandez Molina and Aldo Palmieri — Jageekystuff**. Both creators collaborate on the cosplay design and physical construction. Johán directs the technical integration and testing. Development includes AI-assisted implementation, human-led product decisions, deployment and device testing.
 
@@ -75,7 +75,7 @@ V3 converts centimeters to marker units using the marker width as a reference. I
 
 Known v3 starting targets: Magmar 110 cm, Arcanine 150 cm, Raichu 70 cm, Electrode 90 cm. These are provisional presentation sizes, not verified physical measurements. Model positions also need final testing.
 
-## Camera framing: V3.0-hfx-2 (CAM-01)
+## Camera framing: V3.0-hfx-3 (CAM-01)
 
 In V3, open **Ajustar 3D → CAM-01 · Matched camera framing** after starting the camera. These controls are for testing, not intended as the final visitor interface.
 
@@ -104,7 +104,7 @@ The camera, models and pattern recognition cannot be fully validated until this 
 - Cloudflare configuration: **Framework: None**, **Build command: `exit 0`**, **Output directory: `.`** and repository root as root directory.
 - Prettier configuration in `.prettierrc.json`; `.editorconfig` for 2-space indent. Neither overrides your work projects.
 - Update `VERSION`, `README.md` (when relevant) and `CHANGELOG.md` per release. Minor labels use increasing integers; `3.9` goes to `3.10`, never `4.0` just because of the numbering.
-- Hotfix naming is `v3.0-hfx-2` for follow-up fixes to V3.0 without changing the next regular version.
+- Hotfix naming is `v3.0-hfx-3` for follow-up fixes to V3.0 without changing the next regular version.
 
 ## Deferred features — not in V3.0
 
@@ -116,3 +116,12 @@ The camera, models and pattern recognition cannot be fully validated until this 
 ## Models and credit notes
 
 Models selected: Magmar, Arcanine, Raichu, Electrode. The Electabuzz/Rapidash candidates were rejected and removed in V2 hotfix history. Individual creator licenses for Electrode and Arcanine are described in `credits/index.html`. Original source/licensing metadata for Magmar and Raichu still needs verification; do not imply rights-owner endorsement.
+
+### V3 controls and AR photograph (3.0-hfx-3)
+
+- Compact selectors: choose trainer and Pokémon in one small overlay. Use the circular ◌/◉ control to hide or restore the selectors.
+- ⚙ opens developer calibration and camera diagnostics; the public does not need to use this.
+- 📷 attempts an AR photo capture in **Aligned view** while the physical QR marker is visible. The picture combines webcam video and WebGL models, not the HTML controls. Preview offers **Save photo**, **Share** (where supported), and **Retake**.
+- Camera capture has not been verified on Android Chrome, iOS Safari, or Mac desktop; fall back to the phone screenshot if the experimental button fails. Captures are generated locally and are not uploaded to a server.
+- The V3 Raichu values are a user-tested experimental baseline, **not a final official scale**; in `assets/config/model-calibrations.json`. Values stored previously in browser localStorage take precedence until cleared or reset. Use incognito or Reset to verify defaults.
+- V2 routes, model assets, and the QR pattern are unchanged.

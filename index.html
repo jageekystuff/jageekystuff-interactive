@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#131a2c" />
     <meta name="description" content="Jageekystuff Interactive — mobile augmented reality cosplay experiences" />
     <title>Jageekystuff Interactive · Pokémon AR V3</title>
-    <link rel="stylesheet" href="/assets/styles.css?v=3.0-hfx-2" />
+    <link rel="stylesheet" href="/assets/styles.css?v=3.0-hfx-3" />
   </head>
   <body class="ar-body unified-ar">
     <main>
@@ -14,28 +14,53 @@
 
       <div class="ar-header">
         <span class="mini-brand">✦ Jageekystuff</span>
-        <span id="ar-status" class="ar-status" role="status">AR not started · V3.0-hfx-2</span>
+        <span id="ar-status" class="ar-status" role="status">AR not started · V3.0-hfx-3</span>
       </div>
 
-      <section class="ar-bottom v3-controls" aria-label="Character selection">
-        <div class="v3-panel-heading">
-          <strong>Jageekystuff AR</strong>
-          <span class="v3-version">V3.0-hfx-2 · unified experience</span>
-        </div>
+      <section class="ar-bottom v3-controls" id="selection-controls" aria-label="Character selection">
         <div class="v3-control-group">
-          <span class="v3-label">Choose your trainer</span>
+          <span class="v3-label">Trainer</span>
           <div class="choice" id="trainer-options" role="group" aria-label="Trainer"></div>
         </div>
         <div class="v3-control-group">
-          <span class="v3-label">Choose your Pokémon</span>
+          <span class="v3-label">Pokémon</span>
           <div class="choice" id="model-options" role="group" aria-label="Pokémon"></div>
         </div>
-        <p class="v3-current" id="current-selection">Loading selection…</p>
-        <p class="v3-help">Point at the <a class="guide-link" href="/assets/markers/unified-qr-marker-19cm.svg" target="_blank" rel="noopener noreferrer">same QR-marker</a> printed on the cosplay card. <a class="guide-link" href="/?marker=hiro">HIRO fallback</a> · <a class="guide-link" href="/credits/">Credits</a></p>
+        <p class="v3-current visually-hidden" id="current-selection" aria-live="polite">Loading selection…</p>
+        <p class="v3-help visually-hidden">Point at the printed QR marker.</p>
       </section>
 
+      <div class="v3-actions" id="v3-actions" aria-label="AR actions">
+        <button type="button" id="toggle-controls" class="v3-action-button" aria-controls="selection-controls"
+          aria-expanded="true" aria-label="Hide trainer and Pokémon controls" title="Hide controls">⌄</button>
+        <button type="button" id="capture-photo" class="v3-action-button v3-shutter"
+          aria-label="Take AR photo" title="Take AR photo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 7h3l2-2h4l2 2h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
+            <circle cx="12" cy="13" r="4" />
+          </svg></button>
+      </div>
+
       <button id="open-adjustments" class="adjust-toggle" type="button"
-        aria-controls="ar-adjustments" aria-expanded="false">⚙ Ajustar 3D</button>
+        aria-controls="ar-adjustments" aria-expanded="false" aria-label="Open calibration settings"
+        title="Calibration settings">⚙</button>
+
+      <div id="photo-dialog" class="v3-photo-dialog hidden" role="dialog" aria-modal="true"
+        aria-labelledby="photo-dialog-title">
+        <div class="v3-photo-card">
+          <div class="v3-photo-heading">
+            <strong id="photo-dialog-title">AR photo preview</strong>
+            <button type="button" id="photo-close" aria-label="Close photo preview">✕</button>
+          </div>
+          <img id="photo-preview" alt="Captured augmented reality photo" />
+          <div class="v3-photo-buttons">
+            <button type="button" id="photo-save">Save photo</button>
+            <button type="button" id="photo-share">Share</button>
+            <button type="button" id="photo-retake">Retake</button>
+          </div>
+          <p id="photo-feedback" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+      <p id="capture-feedback" class="v3-capture-feedback hidden" role="status" aria-live="polite"></p>
 
       <div id="ar-adjustments" class="adjust-panel hidden" role="region"
         aria-label="Calibration controls">
@@ -89,19 +114,19 @@
       <div class="ar-start" id="start">
         <div class="start-card">
           <div class="scan-icon">✦</div>
-          <div class="eyebrow">Interactive cosplay · V3.0-hfx-2</div>
+          <div class="eyebrow">Interactive cosplay · V3.0-hfx-3</div>
           <h1>Choose your trainer.<br />Meet your Pokémon.</h1>
-          <p>One card, four Pokémon. Start the camera and point at the QR-marker printed on our cosplay card.</p>
+          <p>One card, four Pokémon. Point at the QR marker to choose a trainer and take an AR photo.</p>
           <button class="button" id="launch" type="button">Start AR camera</button>
           <p class="small-note" id="boot-status" role="status" aria-live="polite"></p>
-          <p class="small-note">Camera permission required · HTTPS · Experimental physical-size calibration.</p>
-          <p class="small-note"><a href="/pokemon/v2/">Open V2 classic experiences</a> · <a href="/credits/">Credits</a></p>
+          <p class="small-note">Camera permission required · HTTPS · AR photo capture is experimental.</p>
+          <p class="small-note"><a href="/assets/markers/unified-qr-marker-19cm.svg" target="_blank" rel="noopener">View test marker</a> · <a href="/pokemon/v2/">V2 classic</a> · <a href="/credits/">Credits</a></p>
         </div>
       </div>
     </main>
     <div id="ar-ui-layer" class="ar-ui-layer" aria-label="AR controls"></div>
-    <script defer src="/core/config.js?v=3.0-hfx-2"></script>
-    <script defer src="/core/ar-engine.js?v=3.0-hfx-2"></script>
-    <script defer src="/experiences/pokemon/v3/app.js?v=3.0-hfx-2"></script>
+    <script defer src="/core/config.js?v=3.0-hfx-3"></script>
+    <script defer src="/core/ar-engine.js?v=3.0-hfx-3"></script>
+    <script defer src="/experiences/pokemon/v3/app.js?v=3.0-hfx-3"></script>
   </body>
 </html>
